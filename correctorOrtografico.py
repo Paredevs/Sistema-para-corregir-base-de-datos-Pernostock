@@ -5,10 +5,6 @@ from tabulate import tabulate
 from tqdm import tqdm
 
 
-     
-
-
-
 
     
 def inventariado_industrial(codigo):
@@ -164,10 +160,6 @@ inv_bodega = []
 
 
 
-
-
-contador = 0
-
 guarda_codigos()
 
 for row in csvreader:
@@ -216,11 +208,7 @@ for row in csvreader:
                     inventario_industrial.append(inventariado_industrial(row[0]))
                     inventario_matriz.append(inventariado_matriz(row[0]))
                     inventario_bodega.append(inventariado_bodega(row[0]))
-                    
-        contador+=1
-   #     print("dato",contador)
-            
-
+                                
 maestra.close()
 
 
