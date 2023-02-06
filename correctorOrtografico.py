@@ -77,6 +77,7 @@ def guarda_codigos():
             codigo_sucursal = int(row[0].replace(" ",""))
             codigos_bodega.append(codigo_sucursal)
             inv_bodega.append(row[5])
+           
         else:
            inicio = inicio + 1
     bodega.close()
@@ -89,6 +90,7 @@ def guarda_codigos():
             codigo_sucursal = int(row[0].replace(" ",""))
             codigos_laserena.append(codigo_sucursal)
             inv_laserena.append(row[5])
+           
         else:
            inicio = inicio + 1
     laserena.close()
@@ -101,6 +103,7 @@ def guarda_codigos():
             codigo_sucursal = int(row[0].replace(" ",""))
             codigos_industrial.append(codigo_sucursal)
             inv_industrial.append(row[5])
+           
 
         else:
            inicio = inicio + 1
@@ -115,6 +118,7 @@ def guarda_codigos():
             codigo_sucursal = int(row[0].replace(" ",""))
             codigos_matriz.append(codigo_sucursal)
             inv_matriz.append(row[5])
+        
                 
         else:
            inicio = inicio + 1
@@ -122,7 +126,14 @@ def guarda_codigos():
     matriz.close()
 
 
-
+def fecha(fecha):
+    if(fecha == None or fecha == "" or fecha.isspace()):
+        return ""
+    else:
+        dia = fecha[0:2]
+        mes = fecha[3:5]
+        anio = fecha[6:10]
+    return anio + "/" + mes + "/" + dia
 
   
 
@@ -143,6 +154,16 @@ inventario_matriz = []
 inventario_bodega = []
 descripcion = []
 tipo_error = []
+
+fecha_compra_industrial = []
+fecha_compra_laserena = []
+fecha_compra_matriz = []
+fecha_compra_bodega = []
+
+fecha_venta_industrial = []
+fecha_venta_laserena = []
+fecha_venta_matriz = []
+fecha_venta_bodega = []
 
 
 codigos_industrial = []
@@ -200,6 +221,8 @@ for row in csvreader:
                 #  print(descripcion_separada)
                 # print( len(descripcion_separada))
                 if(descripcion_separada[0].isalpha() and len(descripcion_separada[0]) == 1 and len(descripcion_separada) == 2 and ((row[9] == '' and row[11] == '') or (row[9] != '' and row[11] == '') or (row[9] == '' and row[11] != ''))):
+                    print("fecha ultima compra:",row[9],"fecha ultima venta:" ,row[11])
+                    
                     #print("La descripcion empieza con una letra:", row[1])
                     codigo.append(row[0])
                     descripcion.append((row[1]).rstrip())
@@ -208,15 +231,24 @@ for row in csvreader:
                     inventario_industrial.append(inventariado_industrial(row[0]))
                     inventario_matriz.append(inventariado_matriz(row[0]))
                     inventario_bodega.append(inventariado_bodega(row[0]))
+                    fecha_compra_matriz.append(fecha(row[9]))
+                    fecha_venta_matriz.append(fecha(row[11]))
+                    fecha_compra_industrial.append(fecha(row[9]))
+                    fecha_venta_industrial.append(fecha(row[11]))
+                    fecha_compra_laserena.append(fecha(row[9]))
+                    fecha_venta_laserena.append(fecha(row[11]))
+                    fecha_compra_bodega.append(fecha(row[9]))
+                    fecha_venta_bodega.append(fecha(row[11]))
+                
                                 
 maestra.close()
 
 
 
-palabras_vacias = pandas.DataFrame(list(zip(codigo,tipo_error,descripcion,inventario_industrial,inventario_laserena,inventario_matriz,inventario_bodega)), columns =["Codigo",'Tipo error', 'Descripcion',"I.Industrial","I.La Serena","I.Matriz","I.Bodega"])
+palabras_vacias = pandas.DataFrame(list(zip(codigo,tipo_error,descripcion,inventario_industrial,fecha_compra_industrial,fecha_venta_industrial,inventario_laserena,fecha_compra_laserena,fecha_venta_laserena,inventario_matriz,fecha_compra_matriz,fecha_venta_matriz,inventario_bodega,fecha_compra_bodega,fecha_venta_bodega)), columns =["Codigo",'Tipo error', 'Descripcion',"I.Industrial","Ult. compra Industrial","Ult. venta Industrial","I.La Serena","Ult. compra La Serena","Ult. venta La Serena","I.Matriz","Ult. compra Matriz","Ult. venta Matriz","I.Bodega","Ult. compra Bodega","Ult. venta Bodega"])
 palabras_vacias.to_csv(r'./errores.csv', header={"Codigo",'Tipo error', 'Descripcion',"I.Industrial","I.La Serena","I.Matriz","I.Bodega"}, index=False, sep=',', mode='w')
 #palabras_empieza_numero = pandas.DataFrame(list(zip(codigo_palabra_empieza_numero,descripcion_palabra_empieza_numero,inventario_industrial,inventario_laserena)), columns =["Codigo", 'Descripcion',"Inventario Industrial","Inventario La Serena"])
 print("PRODUCTOS ERRONEOS: \n")
 table= tabulate(palabras_vacias, headers = 'keys', tablefmt = 'psql')
-print(table)
+#print(table)
 #print("Palabras que empiezan con numero: \n",tabulate(palabras_empieza_numero, headers = 'keys', tablefmt = 'github'))
