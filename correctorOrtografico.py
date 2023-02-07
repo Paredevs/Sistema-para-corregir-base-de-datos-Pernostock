@@ -1,5 +1,7 @@
 import csv,time,pandas,numpy as np
 from tabulate import tabulate
+import re
+
 
 
 from tqdm import tqdm
@@ -135,17 +137,25 @@ def fecha(fecha):
         anio = fecha[6:10]
     return anio + "/" + mes + "/" + dia
 
-  
+def errores_ortograficos(descripcion):
+    
 
+    x = re.search('[B|V]', descripcion)
+    x = re.findall("[{}¿�?]|KK|QW|WR|JL|VB|VT|ÑT|EMBRAGE|UUU|ISQ|AAAA|BBB|CCCC|EEE|HHKG", descripcion)
+    if(x):
+        print("caracteres raros: ",row[0]," D:",descripcion)
+        return 1
 
-
-
-
-maestra =  open ("./database/Maestra.csv","r")
-
-csvreader = csv.reader(maestra, delimiter=',')
-
-
+    #AAAA|BBB|CCCC
+    # if(x):
+    #     pass
+    #     print("B o V: ",row[0]," D:",descripcion)
+    # x = re.search('(TAMOR|V)', descripcion)
+    # if(x):
+        
+    #    # print("TAM*OR: ",row[0]," D:",descripcion)
+    #     return 1
+    return 0
 
 codigo = []
 inventario_industrial = []
@@ -175,38 +185,34 @@ inv_industrial = []
 inv_laserena = []
 inv_matriz = []
 inv_bodega = []
-
-
-
-
-
-
+contador = 0
 guarda_codigos()
+
+maestra =  open ("./database/Maestra.csv","r")
+csvreader = csv.reader(maestra, delimiter=',')
+
 
 for row in csvreader:
 
-        # print(row[9])
-        # print(row[8])
-        # print(row[1])
-        
-        #print(letra_descripcion)
         if(row[1]=='' or row[1].isspace()):
            # print("La descripcion esta vacia")
             codigo.append(row[0])
             descripcion.append('Vacio')
             tipo_error.append("Descripcion vacia")
-            
             inventario_laserena.append(inventariado_laserena(row[0]))
             inventario_industrial.append(inventariado_industrial(row[0]))
             inventario_matriz.append(inventariado_matriz(row[0]))
             inventario_bodega.append(inventariado_bodega(row[0]))
         else:
-    
             descripcion_sin_espacios = str(row[1]).replace(" ","")
             #print(descripcion_acortada)
             #time.sleep(1)
+            contador = contador + errores_ortograficos(row[1].rstrip())
+            #
+            # x = re.search('^([OMBILLA]+)|OMBILLA$', txt)
+            
+    
             if(descripcion_sin_espacios.isdigit()):
-                
             #    print("La descripcion es un numero", descripcion_sin_espacios, "Codigo: ",row[0])
                 codigo.append(row[0])
                 descripcion.append(row[1])
@@ -215,13 +221,12 @@ for row in csvreader:
                 inventario_industrial.append(inventariado_industrial(row[0]))
                 inventario_matriz.append(inventariado_matriz(row[0]))
                 inventario_bodega.append(inventariado_bodega(row[0]))
-
             else:
                 descripcion_separada = str(row[1]).split()
                 #  print(descripcion_separada)
                 # print( len(descripcion_separada))
                 if(descripcion_separada[0].isalpha() and len(descripcion_separada[0]) == 1 and len(descripcion_separada) == 2 and ((row[9] == '' and row[11] == '') or (row[9] != '' and row[11] == '') or (row[9] == '' and row[11] != ''))):
-                    print("fecha ultima compra:",row[9],"fecha ultima venta:" ,row[11])
+                    #print("fecha ultima compra:",row[9],"fecha ultima venta:" ,row[11])
                     
                     #print("La descripcion empieza con una letra:", row[1])
                     codigo.append(row[0])
@@ -239,8 +244,9 @@ for row in csvreader:
                     fecha_venta_laserena.append(fecha(row[11]))
                     fecha_compra_bodega.append(fecha(row[9]))
                     fecha_venta_bodega.append(fecha(row[11]))
-                
-                                
+
+
+print("Total de errores ortograficos: ",contador    )                          
 maestra.close()
 
 
@@ -248,7 +254,7 @@ maestra.close()
 palabras_vacias = pandas.DataFrame(list(zip(codigo,tipo_error,descripcion,inventario_industrial,fecha_compra_industrial,fecha_venta_industrial,inventario_laserena,fecha_compra_laserena,fecha_venta_laserena,inventario_matriz,fecha_compra_matriz,fecha_venta_matriz,inventario_bodega,fecha_compra_bodega,fecha_venta_bodega)), columns =["Codigo",'Tipo error', 'Descripcion',"I.Industrial","Ult. compra Industrial","Ult. venta Industrial","I.La Serena","Ult. compra La Serena","Ult. venta La Serena","I.Matriz","Ult. compra Matriz","Ult. venta Matriz","I.Bodega","Ult. compra Bodega","Ult. venta Bodega"])
 palabras_vacias.to_csv(r'./errores.csv', header={"Codigo",'Tipo error', 'Descripcion',"I.Industrial","I.La Serena","I.Matriz","I.Bodega"}, index=False, sep=',', mode='w')
 #palabras_empieza_numero = pandas.DataFrame(list(zip(codigo_palabra_empieza_numero,descripcion_palabra_empieza_numero,inventario_industrial,inventario_laserena)), columns =["Codigo", 'Descripcion',"Inventario Industrial","Inventario La Serena"])
-print("PRODUCTOS ERRONEOS: \n")
+print("Archivo generado \n")
 table= tabulate(palabras_vacias, headers = 'keys', tablefmt = 'psql')
 #print(table)
 #print("Palabras que empiezan con numero: \n",tabulate(palabras_empieza_numero, headers = 'keys', tablefmt = 'github'))
