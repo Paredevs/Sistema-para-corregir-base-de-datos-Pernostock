@@ -1,6 +1,6 @@
 import csv,datetime
 
-
+#PENDIENTE
 
 maestra =  open ("./database/maestra 8-2-23.csv","r")
 csvreader = csv.reader(maestra, delimiter=',')
