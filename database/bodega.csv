@@ -1,6 +1,6 @@
 Sucursal  : 0010 BODEGA CENTRAL 00000001 dias compras : 1
-,,,,,,,,,,,,,,,
- Codigo,Cod.Proveedor,Descripcion Producto,familia,linea,Inventario,Rotacion,Dia ventas,Ventas,Stock Actual,stock Minimo,Stock Seguridad,Stock Maximo,Ventas Proyectadas,Pendientes en O/C.,Sugerida a Comprar,Precio Lista Proveedor,Total Compra,Proveedor,Proveedor Ultima compra,Fecha Ultima compra,Valor ultima compra,Fecha Ulima Venta,Valor ult.Venta
+
+Codigo,Cod.Proveedor,Descripcion Producto,familia,linea,Inventario,Rotacion,Dia ventas,Ventas,Stock Actual,stock Minimo,Stock Seguridad,Stock Maximo,Ventas Proyectadas,Pendientes en O/C.,Sugerida a Comprar,Precio Lista Proveedor,Total Compra,Proveedor,Proveedor Ultima compra,Fecha Ultima compra,Valor ultima compra,Fecha Ulima Venta,Valor ult.Venta
 00000001,,AMP 24V  FUSIBLE 4 LED 10X31 CRISTAL SV8.5 5218   ,AMPOLLETA,AMPOLLETA LED,S,SIN ROTACION,670,0,0,0,0,0,0,0,0,0,0,IMP.DE REPUESTOS BRASIL LTDA.,,20160820,696,20210326,1114
 00000002,,PLANA ALBA IL STAND 190X90MM BELLOTA 1651299      ,HERR.OTRAS MARCAS,PLANAS,S,SIN ROTACION,670,0,0,0,0,0,0,0,0,0,0,IMP.DE REPUESTOS BRASIL LTDA.,,20210514,11889,20210609,17841
 00000003,,PERNO HEX ZINCADO 5/8 X 1 11 H                    ,PERNO,HEX ZINC PULG,S,SIN ROTACION,670,0,0,0,0,0,0,0,0,0,0,IMP.DE REPUESTOS BRASIL LTDA.,,,161,,

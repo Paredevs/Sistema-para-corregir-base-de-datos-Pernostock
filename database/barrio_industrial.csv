@@ -1,5 +1,5 @@
 Sucursal  : 0005 BARRIO INDUSTRIAL 00000001 dias compras : 10
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
 Codigo,Cod.Proveedor,Descripcion Producto,familia,linea,Inventario,Rotacion,Dia ventas,Ventas,Stock Actual,stock Minimo,Stock Seguridad,Stock Maximo,Ventas Proyectadas,Pendientes en O/C.,Sugerida a Comprar,Precio Lista Proveedor,Total Compra,Proveedor,Proveedor Ultima compra,Fecha Ultima compra,Valor ultima compra,Fecha Ulima Venta,Valor ult.Venta
 00000001,,AMP 24V  FUSIBLE 4 LED 10X31 CRISTAL SV8.5 5218   ,AMPOLLETA,AMPOLLETA LED,N,SIN ROTACION,180,0,6,0,0,0,0,1,0,0,0,IMP.DE REPUESTOS BRASIL LTDA.,,20160820,696,20210326,1114
 00000004,,PERNO HEX GALVANIZADO 5/8 X 1 11H                 ,PERNO,GALVANIZADO,S,SIN ROTACION,180,0,100,0,0,0,0,0,0,0,0,IMP.DE REPUESTOS BRASIL LTDA.,COMERC. PROVEPER LTDA.,20210430,161,20220514,269

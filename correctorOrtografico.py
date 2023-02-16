@@ -2,7 +2,7 @@ import csv,time,pandas,re,sucursal,numpy as np
 from spellchecker import SpellChecker
 from tqdm import tqdm
 from tabulate import tabulate
-from tqdm import tqdm
+
 
 spanish = SpellChecker(language='es')
 
@@ -159,9 +159,9 @@ maestra.close()
 
 
 palabras_vacias = pandas.DataFrame(list(zip(codigo,tipo_error,descripcion,inventario_industrial,inventario_laserena,inventario_matriz,inventario_bodega,fecha_compra_maestra,fecha_venta_maestra)), columns =["Codigo",'Tipo error', 'Descripcion',"I.Industrial","I.La Serena","I.Matriz","I.Bodega","Ult. fecha compra","Ult.fecha venta"])
-palabras_vacias.to_csv(r'./results/Errores ortograficos.csv', header={"Codigo",'Tipo error', 'Descripcion',"I.Industrial","I.La Serena","I.Matriz","I.Bodega","Ult. fecha compra","Ult.fecha venta"}, index=False, sep=',', mode='w')
+palabras_vacias.to_csv(r'./results/Errores ortograficos.csv', header={"Codigo",'Tipo error', 'Descripcion',"I.Industrial","I.La Serena","I.Matriz","I.Bodega","Ult. fecha compra","Ult.fecha venta"}, index=True, sep=',', mode='w')
 una_palabra= pandas.DataFrame(list(zip(una_palabra)), columns =["Descripcion"])
-una_palabra.to_csv(r'./results/Descripciones de una palabra.csv', header={"Descripcion"}, index=False, sep=',', mode='w')
+una_palabra.to_csv(r'./results/Descripciones de una palabra.csv', header={"Descripcion"}, index=True, sep=',', mode='w')
 print("Archivo generado \n")
 #table= tabulate(palabras_vacias, headers = 'keys', tablefmt = 'psql')   #Para crear tabla
 #print(table)
