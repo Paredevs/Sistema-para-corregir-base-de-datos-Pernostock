@@ -3,16 +3,30 @@ import csv,time,operator,re,os
 import itertools
 from collections import Counter
 from tqdm import tqdm
+from pathlib import Path
 
 #Path de los archivos
-MAESTRA_PATH = "./database/maestra.csv"
-BODEGA_PATH = "./database/bodega.csv"
-MATRIZ_PATH = "./database/matriz.csv"
-LASERENA_PATH = "./database/la serena.csv"
-INDUSTRIAL_PATH = "./database/barrio_industrial.csv"
+MAESTRA_PATH = "./database/Maestra.csv"
+BODEGA_PATH = "./database/Bodega central.csv"
+MATRIZ_PATH = "./database/Casa matriz.csv"
+LASERENA_PATH = "./database/La Serena.csv"
+INDUSTRIAL_PATH = "./database/Barrio industrial.csv"
 RESULTS_PATH = "./resultados/" #Path de los resultados
 
+
+def compruebaBasededatos():  #Verifica si existen las bases de datos
+
+    maestra = Path(MAESTRA_PATH)
+    bodega = Path(BODEGA_PATH)
+    matriz = Path(MATRIZ_PATH)
+    laserena = Path(LASERENA_PATH)
+    industrial = Path(INDUSTRIAL_PATH)
+    if (maestra.is_file() and bodega.is_file() and matriz.is_file() and laserena.is_file() and industrial.is_file()):
+        return True
+    return False
+
 def recorre_maestra():
+    
     maestra =  open (MAESTRA_PATH,"r")
     csvreader = csv.reader(maestra, delimiter=',')
     for row in csvreader:

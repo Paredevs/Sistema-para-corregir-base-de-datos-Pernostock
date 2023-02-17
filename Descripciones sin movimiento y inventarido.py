@@ -1,5 +1,10 @@
 import csv,sucursal,pandas
 
+if(sucursal.compruebaBasededatos() == False):  #Verifica si existen las bases de datos
+    print("Falta el archivo maestra.csv o alguna base de datos de las sucursales")
+    input("Presione enter para salir...")
+    exit()
+
 FILE_NAME = 'Productos sin movimiento y inventariado.csv'
 codigo,descripcion,inventario_matriz,grupo,inventario_bodega,inventario_laserena,inventario_industrial,fecha_compra,fecha_venta = [],[],[],[],[],[],[],[],[]
 
@@ -34,10 +39,10 @@ for row in csvreader:
 maestra.close()
 
 try:
-    sucursal.verificaCarpeta()
+    sucursal.verificaCarpeta()  #Veriiica si existe la carpeta de resultados
     sin_movimiento= pandas.DataFrame(list(zip(codigo,descripcion,grupo,fecha_compra,fecha_venta,inventario_bodega,inventario_matriz,inventario_laserena,inventario_industrial)), columns =["Codigo","Descripcion","Grupo","Fecha Compra","Fecha Venta","Inv Bodega","Inv Matriz","Inv Serena","Inv Industrial"])
     sin_movimiento.to_csv(r''+sucursal.RESULTS_PATH+FILE_NAME, header={"Codigo","Descripcion","Grupo","Fecha Compra","Fecha Venta","Inv Bodega","Inv Matriz","Inv Serena","Inv Industrial"}, index=True, sep=',', mode='w')
-    print("Archivo ",FILE_NAME," generado correctamente - Cantidad de productos: ",i)
+    print("Archivo ",FILE_NAME," generado correctamente\nCantidad de productos: ",i)
 except:
     print("Error al generar el archivo ",FILE_NAME)
     input("Presione enter para continuar...")

@@ -3,10 +3,12 @@ from spellchecker import SpellChecker
 from tqdm import tqdm
 from tabulate import tabulate
 
+if(sucursal.compruebaBasededatos() == False):  #Verifica si existen las bases de datos
+    print("Falta el archivo maestra.csv o alguna base de datos de las sucursales")
+    input("Presione enter para salir...")
+    exit()
 
 spanish = SpellChecker(language='es')
-
-
 
 codigo,descripcion,tipo_error  = [],[],[]
 inventario_industrial,inventario_laserena,inventario_matriz,inventario_bodega = [],[],[],[]
@@ -29,7 +31,7 @@ contador = 0
 
 
 # maestra =  open ("./database/Maestra.csv","r")
-maestra =  open ("./database/maestra 8-2-23.csv","r")
+maestra =  open (sucursal.MAESTRA_PATH,"r")
 csvreader = csv.reader(maestra, delimiter=',')
 
 
