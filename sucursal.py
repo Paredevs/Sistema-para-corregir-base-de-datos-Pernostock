@@ -1,15 +1,16 @@
 #Funciones para obtener datos de las sucursales y Maestra
-import csv,time,operator,re
+import csv,time,operator,re,os
 import itertools
 from collections import Counter
 from tqdm import tqdm
 
 #Path de los archivos
-MAESTRA_PATH = "./database/maestra 8-2-23.csv"
+MAESTRA_PATH = "./database/maestra.csv"
 BODEGA_PATH = "./database/bodega.csv"
 MATRIZ_PATH = "./database/matriz.csv"
 LASERENA_PATH = "./database/la serena.csv"
 INDUSTRIAL_PATH = "./database/barrio_industrial.csv"
+RESULTS_PATH = "./resultados/" #Path de los resultados
 
 def recorre_maestra():
     maestra =  open (MAESTRA_PATH,"r")
@@ -262,4 +263,7 @@ def descripciones_sinsentido(descripcion): #Funcion encargada de buscar las desc
     #     return 1
     return False
 
-
+def verificaCarpeta():
+    newpath = r''+RESULTS_PATH 
+    if not os.path.exists(newpath):
+        os.makedirs(newpath)

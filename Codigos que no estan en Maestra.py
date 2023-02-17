@@ -1,8 +1,9 @@
-import csv,time,sucursal,pandas
+import csv,sucursal,pandas
 from tqdm import tqdm
 
 #Programa que comprueba que los codigos de las sucursales esten en la maestra
 
+NAME_FILE = "Codigos que no estan en Maestra.csv"
 
 condigos_maestra,condigos_la_serena,condigos_barrio_industrial,condigos_bodega,condigos_matriz = [],[],[],[],[]
 
@@ -78,10 +79,14 @@ for i in tqdm(range(len(condigos_matriz))):
 
 
 try: 
-    codigos_no_maestra = pandas.DataFrame(list(zip(ubicacion,codigo,inventariado,fecha_compra,fecha_venta)), columns =["Sucursal","Codigo","Inventariado","Fecha de compra sucursal","Fecha de venta sucursal"])
-    codigos_no_maestra.to_csv(r'./results/Codigos que no estan en la Maestra.csv', header={"Sucursal","Codigo","Inventariado","Fecha de compra sucursal","Fecha de venta sucursal"}, index=False, sep=',', mode='w')
-    print("Archivo generado correctamente")
+
+        sucursal.verificaCarpeta()
+        codigos_no_maestra = pandas.DataFrame(list(zip(ubicacion,codigo,inventariado,fecha_compra,fecha_venta)), columns =["Sucursal","Codigo","Inventariado","Fecha de compra sucursal","Fecha de venta sucursal"])
+        codigos_no_maestra.to_csv(r''+sucursal.RESULTS_PATH+NAME_FILE, header={"Sucursal","Codigo","Inventariado","Fecha de compra sucursal","Fecha de venta sucursal"}, index=False, sep=',', mode='w')
+        print("Archivo "+NAME_FILE+" generado correctamente")
+        input("Presione enter para salir")
 except:
-    print("Error al generar el archivo")
+    print("Error al generar el archivo "+NAME_FILE)
+    input("Presione enter para salir")
 
 

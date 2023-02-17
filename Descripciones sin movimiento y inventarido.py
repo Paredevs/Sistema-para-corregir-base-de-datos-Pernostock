@@ -1,6 +1,6 @@
 import csv,sucursal,pandas
 
-
+FILE_NAME = 'Productos sin movimiento y inventariado.csv'
 codigo,descripcion,inventario_matriz,grupo,inventario_bodega,inventario_laserena,inventario_industrial,fecha_compra,fecha_venta = [],[],[],[],[],[],[],[],[]
 
 inv_matriz = dict(sucursal.guarda_inventario_matriz())
@@ -33,6 +33,11 @@ for row in csvreader:
        
 maestra.close()
 
-sin_movimiento= pandas.DataFrame(list(zip(codigo,descripcion,grupo,fecha_compra,fecha_venta,inventario_bodega,inventario_matriz,inventario_laserena,inventario_industrial)), columns =["Codigo","Descripcion","Grupo","Fecha Compra","Fecha Venta","Inv Bodega","Inv Matriz","Inv Serena","Inv Industrial"])
-sin_movimiento.to_csv(r'./results/productos sin movimiento y inventariado.csv', header={"Codigo","Descripcion","Grupo","Fecha Compra","Fecha Venta","Inv Bodega","Inv Matriz","Inv Serena","Inv Industrial"}, index=True, sep=',', mode='w')
-print("Archivo generado correctamente - Cantidad de productos: ",i)
+try:
+    sucursal.verificaCarpeta()
+    sin_movimiento= pandas.DataFrame(list(zip(codigo,descripcion,grupo,fecha_compra,fecha_venta,inventario_bodega,inventario_matriz,inventario_laserena,inventario_industrial)), columns =["Codigo","Descripcion","Grupo","Fecha Compra","Fecha Venta","Inv Bodega","Inv Matriz","Inv Serena","Inv Industrial"])
+    sin_movimiento.to_csv(r''+sucursal.RESULTS_PATH+FILE_NAME, header={"Codigo","Descripcion","Grupo","Fecha Compra","Fecha Venta","Inv Bodega","Inv Matriz","Inv Serena","Inv Industrial"}, index=True, sep=',', mode='w')
+    print("Archivo ",FILE_NAME," generado correctamente - Cantidad de productos: ",i)
+except:
+    print("Error al generar el archivo ",FILE_NAME)
+    input("Presione enter para continuar...")
