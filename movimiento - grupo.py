@@ -3,7 +3,11 @@ from tqdm import tqdm
 
 codigo,descripcion,inventario_matriz,inventario_bodega,inventario_laserena,inventario_industrial,fecha_compra,fecha_venta = [],[],[],[],[],[],[],[]
 
-
+if(sucursal.compruebaBasededatos() == False):  #Verifica si existen las bases de datos
+    print("Falta el archivo maestra.csv o alguna base de datos de las sucursales")
+    input("Presione enter para salir...")
+    exit()
+    
 inv_matriz = dict(sucursal.guarda_inventario_matriz())
 inv_bodega = dict(sucursal.guarda_inventario_bodega())
 inv_serena = dict(sucursal.guarda_inventario_laserena())
