@@ -1,4 +1,6 @@
 
+#Programa para detectar productos con rotacion duplicada
+
 import csv,time
 entries = []
 duplicate_entries = []

@@ -46,3 +46,4 @@ try:
 except:
     print("Error al generar el archivo ",FILE_NAME)
     input("Presione enter para continuar...")
+    exit()

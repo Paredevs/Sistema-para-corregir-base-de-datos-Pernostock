@@ -1,0 +1,11 @@
+*.txt
+*.csv#
+.~lock.Maestra.csv#
+./database/.~lock.Maestra.csv#
+./output
+./__pycache__
+*.pyc
+./__pycache__/*.pyc
+.vscode
+*.sql
+./__pycache__/sucursal.cpython-311.pyc

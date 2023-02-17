@@ -26,7 +26,7 @@ def compruebaBasededatos():  #Verifica si existen las bases de datos
     return False
 
 def recorre_maestra():
-    
+
     maestra =  open (MAESTRA_PATH,"r")
     csvreader = csv.reader(maestra, delimiter=',')
     for row in csvreader:
@@ -96,7 +96,7 @@ def getFechacompraventaMaestra(codigo):
     csvreader = csv.reader(maestra, delimiter=',')
     for row in csvreader:
         if(row[0]==codigo):
-            return setFechasucursal(row[20]),setFechasucursal(row[22])
+            return setFecha(row[9]),setFecha(row[11])
     maestra.close()
     return "",""
 

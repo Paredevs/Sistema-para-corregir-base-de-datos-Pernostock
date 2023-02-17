@@ -1,10 +1,9 @@
 import csv,re,pandas,sucursal
 from tqdm import tqdm
 
-
 def correas():
 
-    maestra =  open ("./database/maestra 8-2-23.csv","r")
+    maestra =  open (sucursal.MAESTRA_PATH,"r")
     csvreader = csv.reader(maestra, delimiter=',')
 
     for row in csvreader:
@@ -44,7 +43,6 @@ def correas():
    # print(correas_correctas)
     maestra.close()
 
-
 def retornadescripcion(codigo):
 
     for i in range(len(original)):
@@ -55,9 +53,14 @@ def retornadescripcion(codigo):
             # return original[i][1]
     return ""
 
+if(sucursal.compruebaBasededatos() == False):  #Verifica si existen las bases de datos
+    print("Falta el archivo maestra.csv o alguna base de datos de las sucursales")
+    input("Presione enter para salir...")
+    exit()
+
+FILE_NAME = "Correccion descripcion de correas.csv"
 nombre_columnas = ["C. malo","D. mala","F.Compra","F.Venta","I.bodega","I.matriz","I.serena","I.industrial","C. bueno","D. buena","F.Compra","F.Venta","I.bodega","I.matriz","I.serena","I.industrial"]
-correas_correctas = []
-correas_incorrectas = []
+correas_correctas,correas_incorrectas = [],[]
 
 original = []
 correa_incorrecta_codigo = []
@@ -82,7 +85,7 @@ correa_correcta_inv_industrial = []
 correas()
 
 
-maestra =  open ("./database/maestra 8-2-23.csv","r")
+maestra =  open (sucursal.MAESTRA_PATH,"r")
 csvreader = csv.reader(maestra, delimiter=',')
 for row in csvreader:
     descripcion_separada = str(row[1]).split()
@@ -98,7 +101,7 @@ for row in csvreader:
 maestra.close()
 
 for correa_incorrecta in tqdm(correas_incorrectas):
-    i=1
+    
     for correa_correcta in correas_correctas:
 
         if(correa_incorrecta[0]==correa_correcta[1]):
@@ -144,11 +147,12 @@ for correa_incorrecta in tqdm(correas_incorrectas):
                     correa_correcta_inv_serena.append(sucursal.getInventarioLaserena(correa_correcta[1]))
                     correa_correcta_inv_industrial.append(sucursal.getInventarioIndustrial(correa_correcta[1]))
                 
-                   
-        
-        i=i+1
            
-
-correas_corregido = pandas.DataFrame(list(zip(correa_incorrecta_codigo,correa_incorrecta_descripcion,correa_incorrecta_fecha_compra_maestra,correa_incorrecta_fecha_venta_maestra,correa_incorrecta_inv_bodega,correa_incorrecta_inv_matriz,correa_incorrecta_inv_serena,correa_incorrecta_inv_industrial,correa_correcta_codigo,correa_correcta_descripcion,correa_correcta_fecha_compra_maestra,correa_correcta_fecha_venta_maestra,correa_correcta_inv_bodega,correa_correcta_inv_matriz,correa_correcta_inv_serena,correa_correcta_inv_industrial)), columns =nombre_columnas)
-correas_corregido.to_csv(r'./results/Correccion de correas.csv', header=nombre_columnas, index=False, sep=',', mode='w')
-print("Archivo creado")
+try:
+    sucursal.verificaCarpeta()  #Veriiica si existe la carpeta de resultados
+    correas_corregido = pandas.DataFrame(list(zip(correa_incorrecta_codigo,correa_incorrecta_descripcion,correa_incorrecta_fecha_compra_maestra,correa_incorrecta_fecha_venta_maestra,correa_incorrecta_inv_bodega,correa_incorrecta_inv_matriz,correa_incorrecta_inv_serena,correa_incorrecta_inv_industrial,correa_correcta_codigo,correa_correcta_descripcion,correa_correcta_fecha_compra_maestra,correa_correcta_fecha_venta_maestra,correa_correcta_inv_bodega,correa_correcta_inv_matriz,correa_correcta_inv_serena,correa_correcta_inv_industrial)), columns =nombre_columnas)
+    correas_corregido.to_csv(r''+sucursal.RESULTS_PATH+FILE_NAME, header=nombre_columnas, index=False, sep=',', mode='w')
+except:
+    print("Error al generar el archivo ",FILE_NAME)
+    input("Presione enter para continuar...")
+    exit()
