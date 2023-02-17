@@ -1,5 +1,6 @@
 import csv,datetime
 
+#Programa que comprueba si una fecha es valida o estan en orden
 #PENDIENTE
 
 maestra =  open ("./database/maestra 8-2-23.csv","r")

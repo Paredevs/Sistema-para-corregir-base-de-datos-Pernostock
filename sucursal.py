@@ -1,9 +1,10 @@
-#Funciones para obtener datos de las sucursales
-import csv,time,operator
+#Funciones para obtener datos de las sucursales y Maestra
+import csv,time,operator,re
 import itertools
 from collections import Counter
 from tqdm import tqdm
 
+#Path de los archivos
 MAESTRA_PATH = "./database/maestra 8-2-23.csv"
 BODEGA_PATH = "./database/bodega.csv"
 MATRIZ_PATH = "./database/matriz.csv"
@@ -17,91 +18,117 @@ def recorre_maestra():
         return row
     maestra.close()
 
-def inventario_bodega(codigo):
+def esCodigo(codigo):
+    if(len(codigo)>1):
+            if(codigo[0][0].isdigit()):
+                return True
+    return False
+
+def getInventarioBodega(codigo):
 
     bodega =  open (BODEGA_PATH,"r")
     csvreader = csv.reader(bodega, delimiter=',')
-    inicio = 0
-    
     for row in csvreader:
         
-        if(inicio==3):
+        if(esCodigo(row)):
             if(codigo == row[0]):
-                return row[5]
-                
-        else:
-            
-            inicio = inicio + 1
+                return row[5]  
     bodega.close()
     return ""
     
-def inventario_matriz(codigo):
+def getInventarioMatriz(codigo):
     
     matriz =  open (MATRIZ_PATH,"r")
     csvreader = csv.reader(matriz, delimiter=',')
-    inicio = 0
     
     for row in csvreader:
-        
-        if(inicio==3):
+        if(esCodigo(row)):
             if(codigo == row[0]):
                 return row[5]
-                
-        else:
-            
-            inicio = inicio + 1
     matriz.close()
     return ""
 
-def inventario_laserena(codigo):
+def getInventarioLaserena(codigo):
     
     laserena =  open (LASERENA_PATH,"r")
     csvreader = csv.reader(laserena, delimiter=',')
-    inicio = 0
     
     for row in csvreader:
         
-        if(inicio==3):
+        if(esCodigo(row)):
             if(codigo == row[0]):
                 return row[5]
-                
-        else:
-            
-            inicio = inicio + 1
     laserena.close()
     return ""
 
-def inventario_industrial(codigo):
+def getInventarioIndustrial(codigo):
 
     
     industrial =  open (INDUSTRIAL_PATH,"r")
     csvreader = csv.reader(industrial, delimiter=',')
-    inicio = 0
     
     for row in csvreader:
         
-        if(inicio==3):
+       if(esCodigo(row)):
             if(codigo == row[0]):
                 return row[5]
-                
-        else:
-            
-            inicio = inicio + 1
     industrial.close()
     return ""
 
-def fecha_compra_venta(codigo):
+def getFechacompraventaMaestra(codigo):
 
     maestra =  open (MAESTRA_PATH,"r")
     csvreader = csv.reader(maestra, delimiter=',')
     for row in csvreader:
         if(row[0]==codigo):
-            return fecha(row[9]),fecha(row[11])
+            return setFechasucursal(row[20]),setFechasucursal(row[22])
     maestra.close()
     return "",""
 
+def getFechacompraventabodega(codigo):
+    bodega = open (BODEGA_PATH,"r")
+    csvreader = csv.reader(bodega,delimiter=',')
+    for row in csvreader:
+        if(esCodigo(row)):
+            if(row[0]==codigo):
+                
+                return setFechasucursal(row[20]),setFechasucursal(row[22])
+    bodega.close()
+    return "",""
 
-def fecha(fecha):
+def getFechacompraventamatriz(codigo):
+    matriz = open (MATRIZ_PATH,"r")
+    csvreader = csv.reader(matriz,delimiter=',')
+    for row in csvreader:
+        if(esCodigo(row)):
+            if(row[0]==codigo):
+                return setFechasucursal(row[20]),setFechasucursal(row[22])
+    matriz.close()
+    return "",""
+    
+def getFechacompraventalaserena(codigo):
+    laserena = open (LASERENA_PATH,"r")
+    csvreader = csv.reader(laserena,delimiter=',')
+    for row in csvreader:
+        if(esCodigo(row)):
+            if(row[0]==codigo):
+                return setFechasucursal(row[20]),setFechasucursal(row[22])
+    laserena.close()
+    return "",""
+
+def getFechacompraventaindustrial(codigo):
+
+    industrial = open (INDUSTRIAL_PATH,"r")
+    csvreader = csv.reader(industrial,delimiter=',')
+    for row in csvreader:
+        if(esCodigo(row)):
+            if(row[0]==codigo):
+                return setFechasucursal(row[20]),setFechasucursal(row[22])
+    industrial.close()
+    return "",""
+
+
+def setFecha(fecha):
     
     if(fecha == None or fecha == "" or fecha.isspace()):
         return ""
@@ -109,8 +136,17 @@ def fecha(fecha):
         dia = fecha[0:2]
         mes = fecha[2:4]
         anio = fecha[4:8]
-       # print(dia,"/",mes,"/",anio)
-        #time.sleep(1)
+      
+    return dia + "/" + mes + "/" + anio
+
+def setFechasucursal(fecha):
+    
+    if(fecha == None or fecha == "" or fecha.isspace()):
+        return ""
+    else:
+        anio = fecha[0:4]
+        mes = fecha[4:6]
+        dia = fecha[6:8]
     return dia + "/" + mes + "/" + anio
 
 
@@ -118,17 +154,10 @@ def guarda_inventario_matriz():
 
     matriz =  open (MATRIZ_PATH,"r")
     csvreader = csv.reader(matriz, delimiter=',')
-    inicio = 0
     inventario = {}
-    
     for row in csvreader:
-        if(inicio==3):
-            
+        if(esCodigo(row)):
             inventario[row[0]]=row[5]
-
-            
-        else:
-            inicio = inicio + 1
     matriz.close()
     return inventario
 
@@ -136,13 +165,10 @@ def guarda_inventario_bodega():
     
         bodega =  open (BODEGA_PATH,"r")
         csvreader = csv.reader(bodega, delimiter=',')
-        inicio = 0
         inventario = {}
         for row in csvreader:
-            if(inicio==3):
+            if(esCodigo(row)):
                 inventario[row[0]]=row[5]
-            else:
-                inicio = inicio + 1
         bodega.close()
         return inventario
 
@@ -151,13 +177,9 @@ def guarda_inventario_laserena():
             inventario = {}
             laserena =  open (LASERENA_PATH,"r")
             csvreader = csv.reader(laserena, delimiter=',')
-            inicio = 0
             for row in csvreader:
-                if(inicio==3):
-                    
+                if(esCodigo(row)):
                     inventario[row[0]]=row[5]
-                else:
-                    inicio = inicio + 1
             laserena.close()
             return inventario
 
@@ -166,13 +188,9 @@ def guarda_inventario_industrial():
                 inventario = {}
                 industrial =  open (INDUSTRIAL_PATH,"r")
                 csvreader = csv.reader(industrial, delimiter=',')
-                inicio = 0
                 for row in csvreader:
-                    if(inicio==3):
-                        
+                    if(esCodigo(row)):
                         inventario[row[0]]=row[5]
-                    else:
-                        inicio = inicio + 1
                 industrial.close()
                 return inventario
 
@@ -195,63 +213,53 @@ def guarda_fechas_compra_venta():
     
 def buscaDuplicadoDict(key_original,value,dict):
     for key in dict:
-        
         if(key!=key_original):
-            # print("key:",key,"key_original:",key_original)
-            # time.sleep(1)
-            if(dict[key]==value):
-                #print("key:",key,"key_original:",key_original)
+            if(dict[key]==value): #Si la descripcion actual es igual a la de otro producto se mantienen ambos
                 return True
-    #print("key:",key)
-    return False
-def duplicadosExactos(DB_PATH):
+    return False #Si la descripcion no es igual a la de otro producto se elimina
+
+def duplicadosExactosAgrupados(DB_PATH,i_descripcion): #Funcion encargada de buscar los productos con descripciones exactas y agruparlos en un diccionario
     
-    data = []
-    des_dict = {}
-    descripciones = []
-    descripciones_duplicadas =[]
-    base_datos = open(DB_PATH,'r')
+    descripciones_duplicadas = {}    
+    base_datos = open(DB_PATH,'r') #Se abre la base de datos, dependiendo de ubicacion
     csvreader = csv.reader(base_datos,delimiter=',')
-    lista_desc_duplicadas = {}
-    for row in csvreader:
-        #print(len(row))
+
+    for row in csvreader: #Se recorre la base de datos
         if(len(row)>1):
             if(row[0][0].isdigit()):
-            #print("row:",row)
-            #input()
-                # data.append(row[1].strip())
-                des_dict[row[0]] = row[1].strip()
-            
-            #lista_desc_duplicadas[row[0]]= descripcion_actual
-                # codigo_actual = row[0]
-                # lista_desc_duplicadas[codigo_actual].append(descripciones_duplicadas.index(descripcion_actual))
-    base_datos.close()
-    print("Cantidad de productos con duplicados: ",len(descripciones_duplicadas))
-    for key in tqdm(list(des_dict)):
+                descripciones_duplicadas[row[0]] = row[i_descripcion].strip()  #Se quitan los espacios en blanco al inicio/final de la descripcion
 
-        # print(key, '->', des_dict[key])
-        # time.sleep(1)
-        if(buscaDuplicadoDict(key,des_dict[key],des_dict) == False):
-            del des_dict[key]
+    base_datos.close() 
+
+    for key in tqdm(list(descripciones_duplicadas)): #Se recorre el diccionario de descripciones
+        if(buscaDuplicadoDict(key,descripciones_duplicadas[key],descripciones_duplicadas) == False):  #Si el producto no tiene duplicados se elimina
+            del descripciones_duplicadas[key]
             
-    
-    #print(des_dict)
-    # for key in des_dict:
-        
-    #     print(key, '->', des_dict[key])
-       # time.sleep(1)
-    
-    # duplicates = {k for k, v in Counter(data).items() if v > 1}
-    # result = [el for el in data if el in duplicates]
-    # print(result)
-# [1, 3, 1, 2, 3, 5, 1, 5, 2]
-    # print(lista_desc_duplicadas)
-    duplicados = set(des_dict.values())
-    d = {}
+    duplicados = set(descripciones_duplicadas.values())
+    dic_duplicados = {}
     for n in duplicados:
-        d[n] = [k for k in des_dict.keys() if des_dict[k] == n]
-    print(d)
-    print("Cantidad de productos con duplicados: ",len(d))
+        dic_duplicados[n] = [k for k in descripciones_duplicadas.keys() if descripciones_duplicadas[k] == n] #Agrupa los productos que tienen la misma descripcion en un diccionario, la llave es la descripcion y el valor es una lista con los codigos de los productos que tienen esa descripcion
+    return dic_duplicados
 
-    # for i in descripciones_duplicadas:
-    #     print(i)
+def descripciones_sinsentido(descripcion): #Funcion encargada de buscar las descripciones que no tienen sentido o son erroneas
+   
+    x = re.findall("[{}¿?]|ÑT|EMBRAGE|UUU|ISQ|AAAA|BBB|CCCC|EEE|HHKG|LLLL|(^PP5|^PP\d$|PPP\d$|PPPP$)|QQQ|RRRR|LALVE|SSS|^XXX|INMIVI|MAUSE|^MASA|(PARACHOQ|PARACH|PARACHOE|PARACHO)$|([^a-zA-Z]PARACH[^a-zA-Z])|5NJ|DSIC|DSIT|SDF|SASD|YYY|^LB$|VACA|DI9S|^A$|^H$|PEDIDO|DIDP|DIS`|GRT|NWU|80X40X15X3MM", descripcion)
+    #x = re.findall("^CORREA \dPK.*|(^CORREA V.* \dPK \d\d\d\d)",descripcion)
+    #x = re.findall("PEDIDOS",descripcion)
+    if(x):
+        #print(" D:",descripcion)
+        
+        return True
+
+    #AAAA|BBB|CCCC
+    # if(x):
+    #     pass
+    #     print("B o V: ",row[0]," D:",descripcion)
+    # x = re.search('(TAMOR|V)', descripcion)
+    # if(x):
+        
+    #    # print("TAM*OR: ",row[0]," D:",descripcion)
+    #     return 1
+    return False
+
+
