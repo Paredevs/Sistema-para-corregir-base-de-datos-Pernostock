@@ -10,7 +10,7 @@ if(funciones.compruebaBasededatos() == False):  #Verifica si existen las bases d
 
 
 duplicados_unicos,familia,lista_duplicados = [],[],[]
-base_datos= int(input("Ingrese el nombre de la base de datos a buscar: \n1) Maestra 2) Bodega 3) Matriz 4) La Serena 5) Industrial: "))
+base_datos= int(input("Ingrese el nombre de la base de datos a buscar: \n1) Maestra 2) Bodega central 3) Casa matriz 4) La Serena 5) Industrial: "))
 if(base_datos == 1): #Busca los duplicados en la maestra
     dic_duplicados = dict(funciones.duplicadosExactosAgrupados(funciones.MAESTRA_PATH,1))
     FILE_NAME = "MAESTRA Duplicados exactos agrupados.csv"
@@ -44,7 +44,12 @@ for key, value in dic_duplicados.items():
 try:
     funciones.verificaCarpeta()  #Veriiica si existe la carpeta de resultados
     palabras_vacias = pandas.DataFrame(list(zip(duplicados_unicos,familia,lista_duplicados)), columns =["Descripcion","Familia","Codigos donde esta duplicado"])
-    palabras_vacias.to_csv(r''+funciones.RESULTS_PATH+'Duplicados exactos agrupados/'+FILE_NAME, header={"Descripcion","Familia","Codigos donde esta duplicado"}, index=True, sep=',', mode='w')
-except:
+    palabras_vacias.to_csv(r''+funciones.RESULTS_PATH+FILE_NAME, header={"Descripcion","Familia","Codigos donde esta duplicado"}, index=True, sep=',', mode='w')
+except Exception as e: 
     print("Error al generar el archivo ",FILE_NAME)
+    print(e)
     input("Presione enter para continuar...")
+    exit()
+print("Archivo generado correctamente en "+funciones.RESULTS_PATH)
+input("Presione enter para salir")
+exit()
