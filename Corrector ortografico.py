@@ -1,9 +1,9 @@
-import csv,time,pandas,re,sucursal,numpy as np
+import csv,time,pandas,re,funciones,numpy as np
 from spellchecker import SpellChecker
 from tqdm import tqdm
 from tabulate import tabulate
 
-if(sucursal.compruebaBasededatos() == False):  #Verifica si existen las bases de datos
+if(funciones.compruebaBasededatos() == False):  #Verifica si existen las bases de datos
     print("Falta el archivo maestra.csv o alguna base de datos de las sucursales")
     input("Presione enter para salir...")
     exit()
@@ -15,10 +15,10 @@ inventario_industrial,inventario_laserena,inventario_matriz,inventario_bodega = 
 fecha_compra_maestra,fecha_venta_maestra = [],[]
  
 
-inv_industrial = dict(sucursal.guarda_inventario_industrial())
-inv_laserena = dict(sucursal.guarda_inventario_laserena())
-inv_matriz = dict(sucursal.guarda_inventario_matriz())
-inv_bodega = dict(sucursal.guarda_inventario_bodega())
+inv_industrial = dict(funciones.guarda_inventario_industrial())
+inv_laserena = dict(funciones.guarda_inventario_laserena())
+inv_matriz = dict(funciones.guarda_inventario_matriz())
+inv_bodega = dict(funciones.guarda_inventario_bodega())
 
 palabras_pk = []
 palabras_correa = []
@@ -31,7 +31,7 @@ contador = 0
 
 
 # maestra =  open ("./database/Maestra.csv","r")
-maestra =  open (sucursal.MAESTRA_PATH,"r")
+maestra =  open (funciones.MAESTRA_PATH,"r")
 csvreader = csv.reader(maestra, delimiter=',')
 
 
@@ -46,13 +46,13 @@ for row in tqdm(csvreader):
             inventario_laserena.append(inv_laserena.get(row[0]))
             inventario_industrial.append(inv_industrial.get(row[0]))
             
-            fecha_compra_maestra.append(sucursal.setFecha(row[9]))
-            fecha_venta_maestra.append(sucursal.setFecha(row[11]))
+            fecha_compra_maestra.append(funciones.setFecha(row[9]))
+            fecha_venta_maestra.append(funciones.setFecha(row[11]))
             contador= contador + 1
             
         else:
             
-            if(sucursal.descripciones_sinsentido(row[1].rstrip())):
+            if(funciones.descripciones_sinsentido(row[1].rstrip())):
                 codigo.append(row[0])
                 descripcion.append(row[1])
                 tipo_error.append("Descripcion erronea")
@@ -60,8 +60,8 @@ for row in tqdm(csvreader):
                 inventario_bodega.append(inv_bodega.get(row[0]))
                 inventario_laserena.append(inv_laserena.get(row[0]))
                 inventario_industrial.append(inv_industrial.get(row[0]))
-                fecha_compra_maestra.append(sucursal.setFecha(row[9]))
-                fecha_venta_maestra.append(sucursal.setFecha(row[11]))
+                fecha_compra_maestra.append(funciones.setFecha(row[9]))
+                fecha_venta_maestra.append(funciones.setFecha(row[11]))
                 contador = contador + 1
                 
             #
@@ -77,8 +77,8 @@ for row in tqdm(csvreader):
                 inventario_laserena.append(inv_laserena.get(row[0]))
                 inventario_industrial.append(inv_industrial.get(row[0]))
 
-                fecha_compra_maestra.append(sucursal.setFecha(row[9]))
-                fecha_venta_maestra.append(sucursal.setFecha(row[11]))
+                fecha_compra_maestra.append(funciones.setFecha(row[9]))
+                fecha_venta_maestra.append(funciones.setFecha(row[11]))
                 contador= contador + 1
                 
             else:
@@ -120,8 +120,8 @@ for row in tqdm(csvreader):
                     inventario_bodega.append(inv_bodega.get(row[0]))
                     inventario_laserena.append(inv_laserena.get(row[0]))
                     inventario_industrial.append(inv_industrial.get(row[0]))
-                    fecha_compra_maestra.append(sucursal.setFecha(row[9]))
-                    fecha_venta_maestra.append(sucursal.setFecha(row[11]))
+                    fecha_compra_maestra.append(funciones.setFecha(row[9]))
+                    fecha_venta_maestra.append(funciones.setFecha(row[11]))
                     contador= contador + 1
                     
     

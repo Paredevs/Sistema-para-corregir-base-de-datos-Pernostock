@@ -1,21 +1,21 @@
-import sucursal,csv,time,pandas
+import funciones,csv,time,pandas
 from tqdm import tqdm
 
 codigo,descripcion,inventario_matriz,inventario_bodega,inventario_laserena,inventario_industrial,fecha_compra,fecha_venta = [],[],[],[],[],[],[],[]
 
-if(sucursal.compruebaBasededatos() == False):  #Verifica si existen las bases de datos
+if(funciones.compruebaBasededatos() == False):  #Verifica si existen las bases de datos
     print("Falta el archivo maestra.csv o alguna base de datos de las sucursales")
     input("Presione enter para salir...")
     exit()
     
-inv_matriz = dict(sucursal.guarda_inventario_matriz())
-inv_bodega = dict(sucursal.guarda_inventario_bodega())
-inv_serena = dict(sucursal.guarda_inventario_laserena())
-inv_industrial = dict(sucursal.guarda_inventario_industrial())
+inv_matriz = dict(funciones.guarda_inventario_matriz())
+inv_bodega = dict(funciones.guarda_inventario_bodega())
+inv_serena = dict(funciones.guarda_inventario_laserena())
+inv_industrial = dict(funciones.guarda_inventario_industrial())
 
 grupo=str(input("Ingrese el grupo de productos a buscar:"))
 grupo = grupo.upper()
-maestra =  open (sucursal.MAESTRA_PATH,"r")
+maestra =  open (funciones.MAESTRA_PATH,"r")
 csvreader = csv.reader(maestra, delimiter=',')
 i = 0
 for row in tqdm(csvreader):
@@ -28,8 +28,8 @@ for row in tqdm(csvreader):
         inventario_bodega.append(inv_bodega.get(row[0]))
         inventario_laserena.append(inv_serena.get(row[0]))
         inventario_industrial.append(inv_industrial.get(row[0]))
-        fecha_compra.append(sucursal.setFecha(row[9]))
-        fecha_venta.append(sucursal.setFecha(row[11]))
+        fecha_compra.append(funciones.setFecha(row[9]))
+        fecha_venta.append(funciones.setFecha(row[11]))
         i = i + 1   
        
 maestra.close()

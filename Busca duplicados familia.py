@@ -1,10 +1,10 @@
 
-#Programa para detectar productos con rotacion duplicada
-
-import csv,time
+#Programa para detectar productos duplicados dependiendo de la familia
+#Pendiente
+import csv,time,funciones
 entries = []
 duplicate_entries = []
-rotacion =  open ("./results/movimiento_rotacion.csv","r") #Se necesita un csv solo con los productos de rotacion
+rotacion =  open (funciones.RESULTS_PATH,"r") #Se necesita un csv solo con los productos de rotacion
 csvreader = csv.reader(rotacion, delimiter=',')
 for row in csvreader:
     if row[2] not in entries:

@@ -1,6 +1,6 @@
-import csv,sucursal,pandas
+import csv,funciones,pandas
 
-if(sucursal.compruebaBasededatos() == False):  #Verifica si existen las bases de datos
+if(funciones.compruebaBasededatos() == False):  #Verifica si existen las bases de datos
     print("Falta el archivo maestra.csv o alguna base de datos de las sucursales")
     input("Presione enter para salir...")
     exit()
@@ -8,12 +8,12 @@ if(sucursal.compruebaBasededatos() == False):  #Verifica si existen las bases de
 FILE_NAME = 'Productos sin movimiento y inventariado.csv'
 codigo,descripcion,inventario_matriz,grupo,inventario_bodega,inventario_laserena,inventario_industrial,fecha_compra,fecha_venta = [],[],[],[],[],[],[],[],[]
 
-inv_matriz = dict(sucursal.guarda_inventario_matriz())
-inv_bodega = dict(sucursal.guarda_inventario_bodega())
-inv_serena = dict(sucursal.guarda_inventario_laserena())
-inv_industrial = dict(sucursal.guarda_inventario_industrial())
+inv_matriz = dict(funciones.guarda_inventario_matriz())
+inv_bodega = dict(funciones.guarda_inventario_bodega())
+inv_serena = dict(funciones.guarda_inventario_laserena())
+inv_industrial = dict(funciones.guarda_inventario_industrial())
 
-maestra =  open (sucursal.MAESTRA_PATH,"r")
+maestra =  open (funciones.MAESTRA_PATH,"r")
 csvreader = csv.reader(maestra, delimiter=',')
 i = 0
 for row in csvreader:
@@ -31,17 +31,17 @@ for row in csvreader:
             inventario_bodega.append(inv_bodega.get(row[0]))
             inventario_laserena.append(inv_serena.get(row[0]))
             inventario_industrial.append(inv_industrial.get(row[0]))
-            fecha_compra.append(sucursal.setFecha(row[9]))
-            fecha_venta.append(sucursal.setFecha(row[11]))
+            fecha_compra.append(funciones.setFecha(row[9]))
+            fecha_venta.append(funciones.setFecha(row[11]))
             i = i + 1
           
        
 maestra.close()
 
 try:
-    sucursal.verificaCarpeta()  #Veriiica si existe la carpeta de resultados
+    funciones.verificaCarpeta()  #Veriiica si existe la carpeta de resultados
     sin_movimiento= pandas.DataFrame(list(zip(codigo,descripcion,grupo,fecha_compra,fecha_venta,inventario_bodega,inventario_matriz,inventario_laserena,inventario_industrial)), columns =["Codigo","Descripcion","Grupo","Fecha Compra","Fecha Venta","Inv Bodega","Inv Matriz","Inv Serena","Inv Industrial"])
-    sin_movimiento.to_csv(r''+sucursal.RESULTS_PATH+FILE_NAME, header={"Codigo","Descripcion","Grupo","Fecha Compra","Fecha Venta","Inv Bodega","Inv Matriz","Inv Serena","Inv Industrial"}, index=True, sep=',', mode='w')
+    sin_movimiento.to_csv(r''+funciones.RESULTS_PATH+FILE_NAME, header={"Codigo","Descripcion","Grupo","Fecha Compra","Fecha Venta","Inv Bodega","Inv Matriz","Inv Serena","Inv Industrial"}, index=True, sep=',', mode='w')
     print("Archivo ",FILE_NAME," generado correctamente\nCantidad de productos: ",i)
 except:
     print("Error al generar el archivo ",FILE_NAME)

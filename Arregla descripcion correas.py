@@ -1,59 +1,46 @@
-import csv,re,pandas,sucursal
+import csv,re,pandas,funciones
 from tqdm import tqdm
+
+#Programa para arreglar la descripcion de las correas
+#Transforma la descripcion de las correas a la forma CORREA 5PK 1000
 
 def correas():
 
-    maestra =  open (sucursal.MAESTRA_PATH,"r")
+    maestra =  open (funciones.MAESTRA_PATH,"r")
     csvreader = csv.reader(maestra, delimiter=',')
 
     for row in csvreader:
-        original.append(row)
-        correa_correcta = re.findall("^CORREA \dPK.*|(^CORREA V.* \dPK \d\d\d\d)",row[1].rstrip())
+        original.append(row) #Guarda la fila de la maestra
+        correa_correcta = re.findall("^CORREA \dPK.*|(^CORREA V.* \dPK \d\d\d\d)",row[1].rstrip()) #Busca si la descripcion de la correa contiene esos patrones
         if(correa_correcta):
-            row[1] = row[1].split() #separa la descripcion
+            row[1] = row[1].split() #separa la descripcion en sub cadenas
     
-            if(row[1][0]!="CORREA"):
+            if(row[1][0]!="CORREA"):#si la primera palabra  de la descripcion no es una CORREA
                 print("UNA CORREA ES INCORRECTA: ",row[0]," D:",row[1])
-            #print("CORREAS CORRECTAS: ",row[1])
             if(len(row[1])>2):
-              #  print("correa con descripcion distinta: ",row[1])
+              
                 correa_distinta= ""
                 for i in range(len(row[1])):
                     correa_distinta = correa_distinta + row[1][i]
-               # print(correa_distinta)
                 row[1][0] = correa_distinta
                 row[1].remove(row[1][1])
-                #print(row[1])
                 tmp = []
                 tmp.append(row[1][0])
                 row[1] = tmp 
-                #print(row[1])
-
-                
-                
-            # time.sleep(0.5)
-            
+        
             row[1].append(row[0]) #agrega el codigo
-            #print(row[1])
-            
-            #time.sleep(0.5)
-            
-        # print(descripcion)
             correas_correctas.append(row[1])
-   # print(correas_correctas)
+
     maestra.close()
 
 def retornadescripcion(codigo):
 
     for i in range(len(original)):
-        # print(original[i])
-        # time.sleep(0.5)
         if(original[i][0]==codigo):
             return original[i][1][0]+" "+original[i][1][1]
-            # return original[i][1]
     return ""
 
-if(sucursal.compruebaBasededatos() == False):  #Verifica si existen las bases de datos
+if(funciones.compruebaBasededatos() == False):  #Verifica si existen las bases de datos
     print("Falta el archivo maestra.csv o alguna base de datos de las sucursales")
     input("Presione enter para salir...")
     exit()
@@ -85,7 +72,7 @@ correa_correcta_inv_industrial = []
 correas()
 
 
-maestra =  open (sucursal.MAESTRA_PATH,"r")
+maestra =  open (funciones.MAESTRA_PATH,"r")
 csvreader = csv.reader(maestra, delimiter=',')
 for row in csvreader:
     descripcion_separada = str(row[1]).split()
@@ -108,21 +95,21 @@ for correa_incorrecta in tqdm(correas_incorrectas):
         
             correa_incorrecta_codigo.append(correa_incorrecta[1])
             correa_incorrecta_descripcion.append(correa_incorrecta[0])
-            correa_incorrecta_fecha_compra_maestra.append(sucursal.getFechacompraventaMaestra(correa_incorrecta[1])[0])
-            correa_incorrecta_fecha_venta_maestra.append(sucursal.getFechacompraventaMaestra(correa_incorrecta[1])[1])
-            correa_incorrecta_inv_bodega.append(sucursal.getInventarioBodega(correa_incorrecta[1]))
-            correa_incorrecta_inv_matriz.append(sucursal.getInventarioMatriz(correa_incorrecta[1]))
-            correa_incorrecta_inv_serena.append(sucursal.getInventarioLaserena(correa_incorrecta[1]))
-            correa_incorrecta_inv_industrial.append(sucursal.getInventarioIndustrial(correa_incorrecta[1]))
+            correa_incorrecta_fecha_compra_maestra.append(funciones.getFechacompraventaMaestra(correa_incorrecta[1])[0])
+            correa_incorrecta_fecha_venta_maestra.append(funciones.getFechacompraventaMaestra(correa_incorrecta[1])[1])
+            correa_incorrecta_inv_bodega.append(funciones.getInventarioBodega(correa_incorrecta[1]))
+            correa_incorrecta_inv_matriz.append(funciones.getInventarioMatriz(correa_incorrecta[1]))
+            correa_incorrecta_inv_serena.append(funciones.getInventarioLaserena(correa_incorrecta[1]))
+            correa_incorrecta_inv_industrial.append(funciones.getInventarioIndustrial(correa_incorrecta[1]))
 
             correa_correcta_codigo.append(correa_correcta[2])
             correa_correcta_descripcion.append(retornadescripcion(correa_correcta[2]))
-            correa_correcta_fecha_compra_maestra.append(sucursal.getFechacompraventaMaestra(correa_correcta[2])[0])
-            correa_correcta_fecha_venta_maestra.append(sucursal.getFechacompraventaMaestra(correa_correcta[2])[1])
-            correa_correcta_inv_bodega.append(sucursal.getInventarioBodega(correa_correcta[2]))
-            correa_correcta_inv_matriz.append(sucursal.getInventarioMatriz(correa_correcta[2]))
-            correa_correcta_inv_serena.append(sucursal.getInventarioLaserena(correa_correcta[2]))
-            correa_correcta_inv_industrial.append(sucursal.getInventarioIndustrial(correa_correcta[2]))
+            correa_correcta_fecha_compra_maestra.append(funciones.getFechacompraventaMaestra(correa_correcta[2])[0])
+            correa_correcta_fecha_venta_maestra.append(funciones.getFechacompraventaMaestra(correa_correcta[2])[1])
+            correa_correcta_inv_bodega.append(funciones.getInventarioBodega(correa_correcta[2]))
+            correa_correcta_inv_matriz.append(funciones.getInventarioMatriz(correa_correcta[2]))
+            correa_correcta_inv_serena.append(funciones.getInventarioLaserena(correa_correcta[2]))
+            correa_correcta_inv_industrial.append(funciones.getInventarioIndustrial(correa_correcta[2]))
         
         else:
             codigo = correa_incorrecta[0]
@@ -130,28 +117,28 @@ for correa_incorrecta in tqdm(correas_incorrectas):
                 
                 correa_incorrecta_codigo.append(correa_incorrecta[1])
                 correa_incorrecta_descripcion.append((correa_incorrecta[0]))
-                correa_incorrecta_fecha_compra_maestra.append(sucursal.getFechacompraventaMaestra(correa_incorrecta[1])[0])
-                correa_incorrecta_fecha_venta_maestra.append(sucursal.getFechacompraventaMaestra(correa_incorrecta[1])[1])
-                correa_incorrecta_inv_bodega.append(sucursal.getInventarioBodega(correa_incorrecta[0]))
-                correa_incorrecta_inv_matriz.append(sucursal.getInventarioMatriz(correa_incorrecta[0]))
-                correa_incorrecta_inv_serena.append(sucursal.getInventarioLaserena(correa_incorrecta[0]))
-                correa_incorrecta_inv_industrial.append(sucursal.getInventarioIndustrial(correa_incorrecta[0]))
+                correa_incorrecta_fecha_compra_maestra.append(funciones.getFechacompraventaMaestra(correa_incorrecta[1])[0])
+                correa_incorrecta_fecha_venta_maestra.append(funciones.getFechacompraventaMaestra(correa_incorrecta[1])[1])
+                correa_incorrecta_inv_bodega.append(funciones.getInventarioBodega(correa_incorrecta[0]))
+                correa_incorrecta_inv_matriz.append(funciones.getInventarioMatriz(correa_incorrecta[0]))
+                correa_incorrecta_inv_serena.append(funciones.getInventarioLaserena(correa_incorrecta[0]))
+                correa_incorrecta_inv_industrial.append(funciones.getInventarioIndustrial(correa_incorrecta[0]))
 
                 if(len(correa_correcta)==2):
                     correa_correcta_codigo.append(correa_correcta[len(correa_correcta)-1])
                     correa_correcta_descripcion.append(correa_correcta[0])
-                    correa_correcta_fecha_compra_maestra.append(sucursal.getFechacompraventaMaestra(correa_correcta[1])[0])
-                    correa_correcta_fecha_venta_maestra.append(sucursal.getFechacompraventaMaestra(correa_correcta[1])[1])
-                    correa_correcta_inv_bodega.append(sucursal.getInventarioBodega(correa_correcta[1]))
-                    correa_correcta_inv_matriz.append(sucursal.getInventarioMatriz(correa_correcta[1]))
-                    correa_correcta_inv_serena.append(sucursal.getInventarioLaserena(correa_correcta[1]))
-                    correa_correcta_inv_industrial.append(sucursal.getInventarioIndustrial(correa_correcta[1]))
+                    correa_correcta_fecha_compra_maestra.append(funciones.getFechacompraventaMaestra(correa_correcta[1])[0])
+                    correa_correcta_fecha_venta_maestra.append(funciones.getFechacompraventaMaestra(correa_correcta[1])[1])
+                    correa_correcta_inv_bodega.append(funciones.getInventarioBodega(correa_correcta[1]))
+                    correa_correcta_inv_matriz.append(funciones.getInventarioMatriz(correa_correcta[1]))
+                    correa_correcta_inv_serena.append(funciones.getInventarioLaserena(correa_correcta[1]))
+                    correa_correcta_inv_industrial.append(funciones.getInventarioIndustrial(correa_correcta[1]))
                 
            
 try:
-    sucursal.verificaCarpeta()  #Veriiica si existe la carpeta de resultados
+    funciones.verificaCarpeta()  #Veriiica si existe la carpeta de resultados
     correas_corregido = pandas.DataFrame(list(zip(correa_incorrecta_codigo,correa_incorrecta_descripcion,correa_incorrecta_fecha_compra_maestra,correa_incorrecta_fecha_venta_maestra,correa_incorrecta_inv_bodega,correa_incorrecta_inv_matriz,correa_incorrecta_inv_serena,correa_incorrecta_inv_industrial,correa_correcta_codigo,correa_correcta_descripcion,correa_correcta_fecha_compra_maestra,correa_correcta_fecha_venta_maestra,correa_correcta_inv_bodega,correa_correcta_inv_matriz,correa_correcta_inv_serena,correa_correcta_inv_industrial)), columns =nombre_columnas)
-    correas_corregido.to_csv(r''+sucursal.RESULTS_PATH+FILE_NAME, header=nombre_columnas, index=False, sep=',', mode='w')
+    correas_corregido.to_csv(r''+funciones.RESULTS_PATH+FILE_NAME, header=nombre_columnas, index=False, sep=',', mode='w')
 except:
     print("Error al generar el archivo ",FILE_NAME)
     input("Presione enter para continuar...")

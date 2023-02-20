@@ -281,3 +281,12 @@ def verificaCarpeta():
     newpath = r''+RESULTS_PATH 
     if not os.path.exists(newpath):
         os.makedirs(newpath)
+
+def getFamilia(descripcion):
+    maestra = open (MAESTRA_PATH,"r")
+    csvreader = csv.reader(maestra, delimiter=',')
+    for row in csvreader:
+        if(row[1].strip()==descripcion):
+            return row[4]
+    maestra.close()
+    return ""
