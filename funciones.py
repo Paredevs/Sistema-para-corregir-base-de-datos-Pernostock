@@ -167,7 +167,7 @@ def setFechasucursal(fecha):
 
 def guarda_inventario_matriz():
 
-    matriz =  open (MATRIZ_PATH,"r")
+    matriz =  open (MATRIZ_PATH,"r",encoding = 'unicode_escape')
     csvreader = csv.reader(matriz, delimiter=',')
     inventario = {}
     for row in csvreader:
@@ -178,7 +178,7 @@ def guarda_inventario_matriz():
 
 def guarda_inventario_bodega():
     
-        bodega =  open (BODEGA_PATH,"r")
+        bodega =  open (BODEGA_PATH,"r",encoding = 'unicode_escape')
         csvreader = csv.reader(bodega, delimiter=',')
         inventario = {}
         for row in csvreader:
@@ -190,7 +190,7 @@ def guarda_inventario_bodega():
 def guarda_inventario_laserena():
         
             inventario = {}
-            laserena =  open (LASERENA_PATH,"r")
+            laserena =  open (LASERENA_PATH,"r",encoding = 'unicode_escape')
             csvreader = csv.reader(laserena, delimiter=',')
             for row in csvreader:
                 if(esCodigo(row)):
@@ -201,7 +201,7 @@ def guarda_inventario_laserena():
 def guarda_inventario_industrial():
             
                 inventario = {}
-                industrial =  open (INDUSTRIAL_PATH,"r")
+                industrial =  open (INDUSTRIAL_PATH,"r",encoding = 'unicode_escape')
                 csvreader = csv.reader(industrial, delimiter=',')
                 for row in csvreader:
                     if(esCodigo(row)):
@@ -213,7 +213,7 @@ def guarda_fechas_compra_venta():
 
     fecha = {}
     
-    maestra =  open (MAESTRA_PATH,"r")
+    maestra =  open (MAESTRA_PATH,"r",encoding = 'unicode_escape')
     csvreader = csv.reader(maestra, delimiter=',')
     for row in csvreader:
            
@@ -236,13 +236,14 @@ def buscaDuplicadoDict(key_original,value,dict):
 def duplicadosExactosAgrupados(DB_PATH,i_descripcion): #Funcion encargada de buscar los productos con descripciones exactas y agruparlos en un diccionario
     
     descripciones_duplicadas = {}    
-    base_datos = open(DB_PATH,'r') #Se abre la base de datos, dependiendo de ubicacion
+    base_datos = open(DB_PATH,'r',encoding = 'unicode_escape') #Se abre la base de datos, dependiendo de ubicacion
     csvreader = csv.reader(base_datos,delimiter=',')
 
     for row in csvreader: #Se recorre la base de datos
-        if(len(row)>1):
-            if(row[0][0].isdigit()):
-                descripciones_duplicadas[row[0]] = row[i_descripcion].strip()  #Se quitan los espacios en blanco al inicio/final de la descripcion
+        if(esCodigo(row)): #Se verifica que la fila tenga codigo
+            if(len(row)>1):
+                if(row[0][0].isdigit()):
+                    descripciones_duplicadas[row[0]] = row[i_descripcion].strip()  #Se quitan los espacios en blanco al inicio/final de la descripcion
 
     base_datos.close() 
 
@@ -277,16 +278,83 @@ def descripciones_sinsentido(descripcion): #Funcion encargada de buscar las desc
     #     return 1
     return False
 
-def verificaCarpeta():
+def verificaCarpeta():  #Funcion encargada de verificar si existe la carpeta de resultados, si no existe la crea
     newpath = r''+RESULTS_PATH 
     if not os.path.exists(newpath):
         os.makedirs(newpath)
 
-def getFamilia(descripcion):
+def getFamilia(descripcion):  #Funcion encargada de obtener la familia de un producto a partir de su descripcion
+    maestra = open (MAESTRA_PATH,"r")
+    csvreader = csv.reader(maestra, delimiter=',')
+    for row in csvreader:
+        if(esCodigo(row)):
+            if(row[1].strip()==descripcion):
+                return row[4]
+    maestra.close()
+    return ""
+
+def getSubgrupo(descripcion):   #Funcion encargada de obtener el subgrupo de un producto a partir de su descripcion
     maestra = open (MAESTRA_PATH,"r")
     csvreader = csv.reader(maestra, delimiter=',')
     for row in csvreader:
         if(row[1].strip()==descripcion):
-            return row[4]
+            return row[5]
     maestra.close()
     return ""
+
+def getStock():    #Funcion encargada de obtener el stock de todas las sucurales, y retornarlos en un diccionario
+
+
+    stock_matriz,stock_bodega,stock_laserena,stock_industrial = {},{},{},{}
+
+    maestra = open (MAESTRA_PATH,"r",encoding = 'unicode_escape')
+    csvreader = csv.reader(maestra, delimiter=',')
+    for row in csvreader:
+        if(esCodigo(row)):
+                if(row[14]!=""):
+                    stock_matriz[row[0]] = str(row[14])
+                   # print("stock matriz: ",stock_matriz)
+                else:
+                    stock_matriz[row[0]] = ""
+                if(row[15]!=""):
+                    stock_laserena[row[0]] = str(row[15])
+                    #print("stock laserena: ",stock_laserena)
+                else:
+                    stock_laserena[row[0]] = ("")
+                if(row[16]!=""):
+                    stock_industrial[row[0]] = str(row[16])
+                   # print("stock industrial: ",stock_industrial)
+                else:
+                    stock_industrial[row[0]] = ""
+                if(row[17]!=""):
+                    stock_bodega[row[0]] = str(row[17])
+                    #print("stock bodega: ",stock_bodega)
+                else:
+                    stock_bodega[row[0]] = ""
+                #print(row[0],stock_matriz,stock_laserena,stock_industrial,stock_bodega)
+    maestra.close()
+    return stock_matriz,stock_laserena,stock_industrial,stock_bodega
+
+
+def getCompra():
+
+    compra = {}
+    maestra = open (MAESTRA_PATH,"r",encoding = 'unicode_escape')
+    csvreader = csv.reader(maestra, delimiter=',')
+    for row in csvreader:
+        if(esCodigo(row)):
+            compra[row[0]] = setFecha(row[9])
+    maestra.close()
+    return compra
+     
+def getVenta():
+
+    venta = {}
+    maestra = open (MAESTRA_PATH,"r",encoding = 'unicode_escape')
+    csvreader = csv.reader(maestra, delimiter=',')
+    for row in csvreader:
+        if(esCodigo(row)):
+            venta[row[0]] = setFecha(row[11])
+    maestra.close()
+    return venta
+
