@@ -9,9 +9,21 @@ def ordenaResultados():
     for key, value in tqdm(dic_duplicados.items()): #Recorremos el diccionario de duplicados a través de sus descripciones y codigos como valores
         duplicados_unicos.append(key)
         lista = ''
+        string_compra = ''
+        string_venta = ''
         for i in value:
             lista = lista +"-"+ i + '\n'
+            for codigo_de_compra,fecha_compra_actual in todo_fecha_compra.items():
+                if(i == codigo_de_compra):
+                    string_compra = string_compra  + fecha_compra_actual+'\n'
+            for codigo_de_venta,fecha_venta_actual in todo_fecha_venta.items():
+                if(i == codigo_de_venta):
+                    string_venta = string_venta  + fecha_venta_actual+'\n'
+        
+        lista_venta.append(string_compra)
+        lista_compra.append(string_venta)
         lista_duplicados.append(lista)
+
 
    
                                         #Casa Matriz
@@ -38,7 +50,7 @@ def ordenaResultados():
             for codigo_de_compra,fecha_compra_actual in todo_fecha_compra.items():
                 if(codigo_duplicado == codigo_de_compra):
                     string_matriz = string_matriz  + fecha_compra_actual+'\n'
-        lista_compra_matriz.append(string_matriz)
+        #lista_compra_matriz.append(string_matriz)
 
         string_matriz = ''
 
@@ -46,7 +58,7 @@ def ordenaResultados():
             for codigo_de_venta,fecha_venta_actual in todo_fecha_venta.items():
                 if(codigo_duplicado == codigo_de_venta):
                     string_matriz = string_matriz  + fecha_venta_actual+'\n'
-        lista_venta_matriz.append(string_matriz)
+       # lista_venta_matriz.append(string_matriz)
 
         
                                     #La Serena
@@ -74,14 +86,14 @@ def ordenaResultados():
             for codigo_de_compra,fecha_compra_actual in todo_fecha_compra.items():
                 if(codigo_duplicado == codigo_de_compra):
                     string_laserena = string_laserena  + fecha_compra_actual+'\n'
-        lista_compra_laserena.append(string_laserena)
+        #lista_compra_laserena.append(string_laserena)
 
         string_laserena = ''
         for codigo_duplicado in value:
             for codigo_de_venta,fecha_venta_actual in todo_fecha_venta.items():
                 if(codigo_duplicado == codigo_de_venta):
                     string_laserena = string_laserena  + fecha_venta_actual+'\n'
-        lista_venta_laserena.append(string_laserena)
+       # lista_venta_laserena.append(string_laserena)
         
                                     #Industrial
         #--------------------------------------------------------------------------
@@ -108,14 +120,14 @@ def ordenaResultados():
             for codigo_de_compra,fecha_compra_actual in todo_fecha_compra.items():
                 if(codigo_duplicado == codigo_de_compra):
                     string_industrial = string_industrial  + fecha_compra_actual+'\n'
-        lista_compra_industrial.append(string_industrial)
+        #ista_compra_industrial.append(string_industrial)
 
         string_industrial = ''
         for codigo_duplicado in value:
             for codigo_de_venta,fecha_venta_actual in todo_fecha_venta.items():
                 if(codigo_duplicado == codigo_de_venta):
                     string_industrial = string_industrial  + fecha_venta_actual+'\n'
-        lista_venta_industrial.append(string_industrial)
+        #lista_venta_industrial.append(string_industrial)
 
                                     #Bodega central
         #--------------------------------------------------------------------------
@@ -138,26 +150,30 @@ def ordenaResultados():
                     string_bodega = string_bodega  + inventario_actual+'\n'
 
         lista_inv_bodega.append(string_bodega)
+        
 
         string_bodega = ''
         for codigo_duplicado in value:
             for codigo_de_compra,fecha_compra_actual in todo_fecha_compra.items():
                 if(codigo_duplicado == codigo_de_compra):
                     string_bodega = string_bodega  + fecha_compra_actual+'\n'
-        lista_compra_bodega.append(string_bodega)
+        
 
         string_bodega = ''
         for codigo_duplicado in value:
             for codigo_de_venta,fecha_venta_actual in todo_fecha_venta.items():
                 if(codigo_duplicado == codigo_de_venta):
                     string_bodega = string_bodega  + fecha_venta_actual+'\n'
-        lista_venta_bodega.append(string_bodega)
+        
+        
+        
 
 
         #--------------------------------------------------------------------------
 
        
-
+        
+        
 
     
     
@@ -172,11 +188,11 @@ if(funciones.compruebaBasededatos() == False):  #Verifica si existen las bases d
 duplicados_unicos,grupo,subgrupo,lista_duplicados = [],[],[],[]   #Listas para guardar los resultados
 lista_stock_bodega,lista_stock_matriz,lista_stock_laserena,lista_stock_industrial = [],[],[],[]
 lista_inv_bodega,lista_inv_matriz,lista_inv_laserena,lista_inv_industrial = [],[],[],[]
-lista_compra_bodega,lista_compra_matriz,lista_compra_laserena,lista_compra_industrial = [],[],[],[]
-lista_venta_bodega,lista_venta_matriz,lista_venta_laserena,lista_venta_industrial = [],[],[],[]
+lista_compra = []
+lista_venta = []
 
-fecha_compra_bodega, fecha_compra_matriz, fecha_compra_laserena, fecha_compra_industrial = [],[],[],[]
-fecha_venta_bodega, fecha_venta_matriz, fecha_venta_laserena, fecha_venta_industrial = [],[],[],[]
+fecha_compra = []
+fecha_venta = []
 base_datos= int(input("Ingrese el nombre de la base de datos a buscar: \n1) Maestra 2) Bodega central 3) Casa matriz 4) La Serena 5) Industrial: "))
 print("Buscando duplicados exactos en la base de datos")
 if(base_datos == 1): #Busca los duplicados en la maestra
@@ -221,12 +237,15 @@ todo_fecha_venta= dict(funciones.getVenta())
 
 
 
+
 time.sleep(2)
 ordenaResultados()
 
+
+
 try:
     funciones.verificaCarpeta()  #Veriiica si existe la carpeta de resultados
-    resultado = pandas.DataFrame(list(zip(duplicados_unicos,lista_duplicados,lista_stock_bodega,lista_inv_bodega,lista_compra_bodega,lista_venta_bodega,lista_stock_matriz,lista_inv_matriz,lista_compra_matriz,lista_venta_matriz,lista_stock_laserena,lista_inv_laserena,lista_compra_laserena,lista_venta_laserena,lista_stock_industrial,lista_inv_industrial,lista_compra_industrial,lista_venta_industrial)), columns =["Descripcion","Duplicados","Stock Bodega","Inventario Bodega","Ult. compra Bodega","Ult. Venta Bodega","Stock Matriz","Inventario Matriz","Ult. compra Matriz","Ult. venta Matriz","Stock La Serena","Inventario La Serena","Ult. compra La Serena","Ult. venta La Serena","Stock Industrial","Inventario Industrial","Ult. compra Industrial","Ult. venta Industrial"])
+    resultado = pandas.DataFrame(list(zip(duplicados_unicos,lista_duplicados,lista_stock_bodega,lista_inv_bodega,lista_stock_matriz,lista_inv_matriz,lista_stock_laserena,lista_inv_laserena,lista_stock_industrial,lista_inv_industrial,lista_compra,lista_venta)), columns =["Descripcion","Duplicados","Stock Bodega","Inventario Bodega","Stock Matriz","Inventario Matriz","Stock La Serena","Inventario La Serena","Stock Industrial","Inventario Industrial","Ult. compra","Ult. venta"])
     resultado.to_csv(r''+funciones.RESULTS_PATH+FILE_NAME, header=True, index=False, sep=',', mode='w')
     #Original
     # resultado = pandas.DataFrame(list(zip(duplicados_unicos,grupo,subgrupo,lista_duplicados)), columns =["Descripcion","Grupo","Subgrupo","Codigos donde esta duplicado"])
