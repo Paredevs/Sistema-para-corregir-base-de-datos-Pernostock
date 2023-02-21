@@ -1,6 +1,6 @@
 ## Funcionalidad
 
-Los scripts se encargan de leer archivos de texto plano (```.csv```) y realizar una serie de acciones para identificar los fallos en la base de datos. Cuando finaliza, se genera un archivo de texto plano en formato ```.csv``` en  el directorio ```./resultados/``` 
+Los scripts se encargan de leer archivos de texto plano (```.csv```) y realizar una serie de funciones para identificar los fallos en la base de datos. Cuando finaliza, se genera un archivo de texto plano en formato ```.csv``` en  el directorio ```./resultados/``` 
 
  En total las bases de datos son 5 archivos, las cuales 4 corresponden a las sucursales y uno a la base de datos Maestra
 
