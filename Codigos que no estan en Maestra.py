@@ -25,8 +25,6 @@ la_serena =  open (funciones.LASERENA_PATH,"r")
 csvreader = csv.reader(la_serena, delimiter=',')
 for row in csvreader:
     if(funciones.esCodigo(row)):
-        print(row[0])
-        time.sleep(0.8)
         codigos_la_serena.append(row[0])   #Guarda los codigos de la sucursal la serena
 la_serena.close()
 
@@ -51,12 +49,18 @@ for row in csvreader:
         codigos_matriz.append(row[0]) #Guarda los codigos de la sucursal casa matriz
 matriz.close()
 
+print("Cantidad de codigos en la maestra: ",len(codigos_maestra))
+print("Cantidad de codigos en la serena: ",len(codigos_la_serena))
+print("Cantidad de codigos en el barrio industrial: ",len(codigos_barrio_industrial))
+print("Cantidad de codigos en la bodega central: ",len(codigos_bodega))
+print("Cantidad de codigos en la casa matriz: ",len(codigos_matriz))
+
+
 ubicacion,codigo,inventariado,fecha_compra,fecha_venta = [],[],[],[],[]
 
 print("Sucursal La Serena:")
 for i in tqdm(range(len(codigos_la_serena))):
     if(codigos_la_serena[i] not  in codigos_maestra):  #Compara los codigos de la serena con los de la maestra
-        print("codigo")
         ubicacion.append("La Serena")
         codigo.append(codigos_la_serena[i])
         inventariado.append(funciones.getInventarioLaserena(codigos_la_serena[i]))
@@ -66,7 +70,6 @@ for i in tqdm(range(len(codigos_la_serena))):
 print("Sucursal Barrio Industrial:")
 for i in tqdm(range(len(codigos_barrio_industrial))):
     if(codigos_barrio_industrial[i] not in codigos_maestra):  #Compara los codigos del barrio industrial con los de la maestra
-        print("codigo")
         ubicacion.append("Barrio Industrial")
         codigo.append(codigos_barrio_industrial[i])
         inventariado.append(funciones.getInventarioIndustrial(codigos_barrio_industrial[i]))
@@ -76,7 +79,6 @@ for i in tqdm(range(len(codigos_barrio_industrial))):
 print("Sucursal Bodega Central:")
 for i in tqdm(range(len(codigos_bodega))):
     if(codigos_bodega[i] not in codigos_maestra):  #Compara los codigos de la bodega central con los de la maestra
-        print("codigo")
         ubicacion.append("Bodega central")
         codigo.append(codigos_bodega[i])
         inventariado.append(funciones.getInventarioBodega(codigos_bodega[i]))
@@ -86,7 +88,6 @@ for i in tqdm(range(len(codigos_bodega))):
 print("Sucursal Casa Matriz:")    
 for i in tqdm(range(len(codigos_matriz))):
     if(codigos_matriz[i] not in codigos_maestra):  #Compara los codigos de la casa matriz con los de la maestra
-        print("codigo")
         ubicacion.append("Casa Matriz")
         codigo.append(codigos_matriz[i])
         inventariado.append(funciones.getInventarioMatriz(codigos_matriz[i]))
@@ -103,5 +104,3 @@ except:
     print("Error al generar el archivo "+NAME_FILE)
     input("Presione enter para salir...")
     exit()
-
-

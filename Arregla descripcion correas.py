@@ -146,6 +146,6 @@ except:
     print("Error al generar el archivo ",FILE_NAME)
     input("Presione enter para continuar...")
     exit()
-print("Archivo generado correctamente en "+funciones.RESULTS_PATH)
+print("Archivo ",FILE_NAME," generado correctamente en "+funciones.RESULTS_PATH)
 input("Presione enter para salir")
 exit()
