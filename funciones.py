@@ -21,8 +21,31 @@ def compruebaBasededatos():  #Verifica si existen las bases de datos
     matriz = Path(MATRIZ_PATH)
     laserena = Path(LASERENA_PATH)
     industrial = Path(INDUSTRIAL_PATH)
+
+    maestra_file =False
+    bodega_file = False
+    matriz_file = False
+    laserena_file = False
+    industrial_file = False
+
+    bases_que_faltan = 'Faltan los siguientes archivos en la carpeta '+RESULTS_PATH+' o estan mal escritos:\n'
+    
     if (maestra.is_file() and bodega.is_file() and matriz.is_file() and laserena.is_file() and industrial.is_file()):
         return True
+    else:
+        if(not maestra.is_file()):
+            bases_que_faltan += '-Maestra.csv\n'
+        if(not bodega.is_file()):
+            bases_que_faltan += '-Bodega central.csv\n'
+        if(not matriz.is_file()):
+            bases_que_faltan += '-Casa matriz.csv\n'
+        if(not laserena.is_file()):
+            bases_que_faltan += '-La Serena.csv\n'
+        if(not industrial.is_file()):
+            bases_que_faltan += '-Barrio industrial.csv\n'
+    return bases_que_faltan
+
+            
     return False
 
 def recorre_maestra():
