@@ -1,90 +1,97 @@
-import csv,funciones,pandas
+import csv,funciones,pandas,time
 from tqdm import tqdm
 
 #Programa que comprueba que los codigos de las sucursales esten en la maestra
 
-if(funciones.compruebaBasededatos() == False):  #Verifica si existen las bases de datos
-    print("Falta el archivo maestra.csv o alguna base de datos de las sucursales")
+if(isinstance(funciones.compruebaBasededatos(), str)):  #Verifica si existen las bases de datos
+    print(funciones.compruebaBasededatos()) #Imprime cual base de datos no existe
     input("Presione enter para salir...")
     exit()
 
 
 NAME_FILE = "Codigos que no estan en la Maestra.csv"
 
-condigos_maestra,condigos_la_serena,condigos_barrio_industrial,condigos_bodega,condigos_matriz = [],[],[],[],[]
+codigos_maestra,codigos_la_serena,codigos_barrio_industrial,codigos_bodega,codigos_matriz = [],[],[],[],[]
 
 maestra =  open (funciones.MAESTRA_PATH,"r")
 csvreader = csv.reader(maestra, delimiter=',')
 for row in csvreader:
-    condigos_maestra.append(row[0])
+    if(funciones.esCodigo(row)):
+        
+        codigos_maestra.append(row[0])
 maestra.close()
 
 la_serena =  open (funciones.LASERENA_PATH,"r")
 csvreader = csv.reader(la_serena, delimiter=',')
 for row in csvreader:
     if(funciones.esCodigo(row)):
-        condigos_la_serena.append(row[0])   #Guarda los codigos de la sucursal la serena
+        print(row[0])
+        time.sleep(0.8)
+        codigos_la_serena.append(row[0])   #Guarda los codigos de la sucursal la serena
 la_serena.close()
 
 barrio_industrial =  open (funciones.INDUSTRIAL_PATH,"r")
 csvreader = csv.reader(barrio_industrial, delimiter=',')
 for row in csvreader:
     if(funciones.esCodigo(row)):
-        condigos_barrio_industrial.append(row[0])  #Guarda los codigos de la sucursal barrio industrial
+        codigos_barrio_industrial.append(row[0])  #Guarda los codigos de la sucursal barrio industrial
 barrio_industrial.close()
 
 bodega =  open (funciones.BODEGA_PATH,"r")
 csvreader = csv.reader(bodega, delimiter=',')
 for row in csvreader:
     if(funciones.esCodigo(row)):
-        condigos_bodega.append(row[0])  #Guarda los codigos de la sucursal bodega central
+        codigos_bodega.append(row[0])  #Guarda los codigos de la sucursal bodega central
 bodega.close()
 
 matriz =  open (funciones.MATRIZ_PATH,"r")
 csvreader = csv.reader(matriz, delimiter=',')
 for row in csvreader:
     if(funciones.esCodigo(row)):
-        condigos_matriz.append(row[0]) #Guarda los codigos de la sucursal casa matriz
+        codigos_matriz.append(row[0]) #Guarda los codigos de la sucursal casa matriz
 matriz.close()
 
 ubicacion,codigo,inventariado,fecha_compra,fecha_venta = [],[],[],[],[]
 
 print("Sucursal La Serena:")
-for i in tqdm(range(len(condigos_la_serena))):
-    if(condigos_la_serena[i] not  in condigos_maestra):  #Compara los codigos de la serena con los de la maestra
+for i in tqdm(range(len(codigos_la_serena))):
+    if(codigos_la_serena[i] not  in codigos_maestra):  #Compara los codigos de la serena con los de la maestra
+        print("codigo")
         ubicacion.append("La Serena")
-        codigo.append(condigos_la_serena[i])
-        inventariado.append(funciones.getInventarioLaserena(condigos_la_serena[i]))
-        fecha_compra.append(funciones.getFechacompraventalaserena(condigos_la_serena[i])[0])
-        fecha_venta.append(funciones.getFechacompraventalaserena(condigos_la_serena[i])[1])
+        codigo.append(codigos_la_serena[i])
+        inventariado.append(funciones.getInventarioLaserena(codigos_la_serena[i]))
+        fecha_compra.append(funciones.getFechacompraventalaserena(codigos_la_serena[i])[0])
+        fecha_venta.append(funciones.getFechacompraventalaserena(codigos_la_serena[i])[1])
         
 print("Sucursal Barrio Industrial:")
-for i in tqdm(range(len(condigos_barrio_industrial))):
-    if(condigos_barrio_industrial[i] not in condigos_maestra):  #Compara los codigos del barrio industrial con los de la maestra
+for i in tqdm(range(len(codigos_barrio_industrial))):
+    if(codigos_barrio_industrial[i] not in codigos_maestra):  #Compara los codigos del barrio industrial con los de la maestra
+        print("codigo")
         ubicacion.append("Barrio Industrial")
-        codigo.append(condigos_barrio_industrial[i])
-        inventariado.append(funciones.getInventarioIndustrial(condigos_barrio_industrial[i]))
-        fecha_compra.append(funciones.getFechacompraventaindustrial(condigos_barrio_industrial[i])[0])
-        fecha_venta.append(funciones.getFechacompraventaindustrial(condigos_barrio_industrial[i])[1])
+        codigo.append(codigos_barrio_industrial[i])
+        inventariado.append(funciones.getInventarioIndustrial(codigos_barrio_industrial[i]))
+        fecha_compra.append(funciones.getFechacompraventaindustrial(codigos_barrio_industrial[i])[0])
+        fecha_venta.append(funciones.getFechacompraventaindustrial(codigos_barrio_industrial[i])[1])
 
 print("Sucursal Bodega Central:")
-for i in tqdm(range(len(condigos_bodega))):
-    if(condigos_bodega[i] not in condigos_maestra):  #Compara los codigos de la bodega central con los de la maestra
+for i in tqdm(range(len(codigos_bodega))):
+    if(codigos_bodega[i] not in codigos_maestra):  #Compara los codigos de la bodega central con los de la maestra
+        print("codigo")
         ubicacion.append("Bodega central")
-        codigo.append(condigos_bodega[i])
-        inventariado.append(funciones.getInventarioBodega(condigos_bodega[i]))
-        fecha_compra.append(funciones.getFechacompraventabodega(condigos_bodega[i])[0])
-        fecha_venta.append(funciones.getFechacompraventabodega(condigos_bodega[i])[1])
+        codigo.append(codigos_bodega[i])
+        inventariado.append(funciones.getInventarioBodega(codigos_bodega[i]))
+        fecha_compra.append(funciones.getFechacompraventabodega(codigos_bodega[i])[0])
+        fecha_venta.append(funciones.getFechacompraventabodega(codigos_bodega[i])[1])
 
 print("Sucursal Casa Matriz:")    
-for i in tqdm(range(len(condigos_matriz))):
-    if(condigos_matriz[i] not in condigos_maestra):  #Compara los codigos de la casa matriz con los de la maestra
+for i in tqdm(range(len(codigos_matriz))):
+    if(codigos_matriz[i] not in codigos_maestra):  #Compara los codigos de la casa matriz con los de la maestra
+        print("codigo")
         ubicacion.append("Casa Matriz")
-        codigo.append(condigos_matriz[i])
-        inventariado.append(funciones.getInventarioMatriz(condigos_matriz[i]))
-        fecha_compra.append(funciones.getFechacompraventamatriz(condigos_matriz[i])[0])
-        fecha_venta.append(funciones.getFechacompraventamatriz(condigos_matriz[i])[1])
-
+        codigo.append(codigos_matriz[i])
+        inventariado.append(funciones.getInventarioMatriz(codigos_matriz[i]))
+        fecha_compra.append(funciones.getFechacompraventamatriz(codigos_matriz[i])[0])
+        fecha_venta.append(funciones.getFechacompraventamatriz(codigos_matriz[i])[1])
 
 try: #Intenta generar el archivo
     funciones.verificaCarpeta()  #Verifica si existe la carpeta de resultados, si no la crea

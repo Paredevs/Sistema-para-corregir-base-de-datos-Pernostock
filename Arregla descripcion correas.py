@@ -10,26 +10,27 @@ def correas():
     csvreader = csv.reader(maestra, delimiter=',')
 
     for row in csvreader:
-        original.append(row) #Guarda la fila de la maestra
-        correa_correcta = re.findall("^CORREA \dPK.*|(^CORREA V.* \dPK \d\d\d\d)",row[1].rstrip()) #Busca si la descripcion de la correa contiene esos patrones
-        if(correa_correcta):
-            row[1] = row[1].split() #separa la descripcion en sub cadenas
-    
-            if(row[1][0]!="CORREA"):#si la primera palabra  de la descripcion no es una CORREA
-                print("UNA CORREA ES INCORRECTA: ",row[0]," D:",row[1])
-            if(len(row[1])>2):
-              
-                correa_distinta= ""
-                for i in range(len(row[1])):
-                    correa_distinta = correa_distinta + row[1][i]
-                row[1][0] = correa_distinta
-                row[1].remove(row[1][1])
-                tmp = []
-                tmp.append(row[1][0])
-                row[1] = tmp 
-        
-            row[1].append(row[0]) #agrega el codigo
-            correas_correctas.append(row[1])
+        if(funciones.esCodigo(row)):
+            original.append(row) #Guarda la fila de la maestra
+            correa_correcta = re.findall("^CORREA \dPK.*|(^CORREA V.* \dPK \d\d\d\d)",row[1].rstrip()) #Busca si la descripcion de la correa contiene esos patrones
+            if(correa_correcta):
+                row[1] = row[1].split() #separa la descripcion en sub cadenas
+
+                if(row[1][0]!="CORREA"):#si la primera palabra  de la descripcion no es una CORREA
+                    print("UNA CORREA ES INCORRECTA: ",row[0]," D:",row[1])
+                if(len(row[1])>2):
+                
+                    correa_distinta= ""
+                    for i in range(len(row[1])):
+                        correa_distinta = correa_distinta + row[1][i]
+                    row[1][0] = correa_distinta
+                    row[1].remove(row[1][1])
+                    tmp = []
+                    tmp.append(row[1][0])
+                    row[1] = tmp 
+
+                row[1].append(row[0]) #agrega el codigo
+                correas_correctas.append(row[1])
 
     maestra.close()
 
@@ -40,10 +41,11 @@ def retornadescripcion(codigo):
             return original[i][1][0]+" "+original[i][1][1]
     return ""
 
-if(funciones.compruebaBasededatos() == False):  #Verifica si existen las bases de datos
-    print("Falta el archivo maestra.csv o alguna base de datos de las sucursales")
+if(isinstance(funciones.compruebaBasededatos(), str)):  #Verifica si existen las bases de datos
+    print(funciones.compruebaBasededatos()) #Imprime cual base de datos no existe
     input("Presione enter para salir...")
     exit()
+
 
 FILE_NAME = "Correccion descripcion de correas.csv"
 nombre_columnas = ["C. malo","D. mala","F.Compra","F.Venta","I.bodega","I.matriz","I.serena","I.industrial","C. bueno","D. buena","F.Compra","F.Venta","I.bodega","I.matriz","I.serena","I.industrial"]
@@ -75,13 +77,14 @@ correas()
 maestra =  open (funciones.MAESTRA_PATH,"r")
 csvreader = csv.reader(maestra, delimiter=',')
 for row in csvreader:
-    descripcion_separada = str(row[1]).split()
-    if(len(descripcion_separada)==1 and len(descripcion_separada[0])>3 and descripcion_separada[0][0].isdigit() and  descripcion_separada[0][1]=="P"):               
-        correa_erronea_separada=descripcion_separada[0].split("-")
-        correa_erronea_separada[0]=correa_erronea_separada[0]+correa_erronea_separada[1]
-        correa_erronea_separada.remove(correa_erronea_separada[1])
-        correa_erronea_separada.append(row[0])
-        correas_incorrectas.append(correa_erronea_separada)
+    if(funciones.esCodigo(row)):
+        descripcion_separada = str(row[1]).split()
+        if(len(descripcion_separada)==1 and len(descripcion_separada[0])>3 and descripcion_separada[0][0].isdigit() and  descripcion_separada[0][1]=="P"):               
+            correa_erronea_separada=descripcion_separada[0].split("-")
+            correa_erronea_separada[0]=correa_erronea_separada[0]+correa_erronea_separada[1]
+            correa_erronea_separada.remove(correa_erronea_separada[1])
+            correa_erronea_separada.append(row[0])
+            correas_incorrectas.append(correa_erronea_separada)
                         
                 
 
@@ -143,3 +146,6 @@ except:
     print("Error al generar el archivo ",FILE_NAME)
     input("Presione enter para continuar...")
     exit()
+print("Archivo generado correctamente en "+funciones.RESULTS_PATH)
+input("Presione enter para salir")
+exit()

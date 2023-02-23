@@ -22,12 +22,6 @@ def compruebaBasededatos():  #Verifica si existen las bases de datos
     laserena = Path(LASERENA_PATH)
     industrial = Path(INDUSTRIAL_PATH)
 
-    maestra_file =False
-    bodega_file = False
-    matriz_file = False
-    laserena_file = False
-    industrial_file = False
-
     bases_que_faltan = 'Faltan los siguientes archivos en la carpeta '+RESULTS_PATH+' o estan mal escritos:\n'
     
     if (maestra.is_file() and bodega.is_file() and matriz.is_file() and laserena.is_file() and industrial.is_file()):
@@ -45,8 +39,6 @@ def compruebaBasededatos():  #Verifica si existen las bases de datos
             bases_que_faltan += '-Barrio industrial.csv\n'
     return bases_que_faltan
 
-            
-    return False
 
 def recorre_maestra():
 
@@ -118,8 +110,9 @@ def getFechacompraventaMaestra(codigo):
     maestra =  open (MAESTRA_PATH,"r")
     csvreader = csv.reader(maestra, delimiter=',')
     for row in csvreader:
-        if(row[0]==codigo):
-            return setFecha(row[9]),setFecha(row[11])
+        if(esCodigo(row)):
+            if(row[0]==codigo):
+                return setFecha(row[9]),setFecha(row[11])
     maestra.close()
     return "",""
 
