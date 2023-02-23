@@ -8,6 +8,8 @@ def ordenaResultados():
     print("Ordenando resultados...")
     for key, value in tqdm(dic_duplicados.items()): #Recorremos el diccionario de duplicados a través de sus descripciones y codigos como valores
         duplicados_unicos.append(key)
+        #print("key: ",key," - value: ",value)
+        #input()
         lista = ''
         string_compra = ''
         string_venta = ''
@@ -20,8 +22,8 @@ def ordenaResultados():
                 if(i == codigo_de_venta):
                     string_venta = string_venta  + fecha_venta_actual+'\n'
         
-        lista_venta.append(string_compra)
-        lista_compra.append(string_venta)
+        lista_venta.append(string_venta)
+        lista_compra.append(string_compra)
         lista_duplicados.append(lista)
 
 
